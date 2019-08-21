@@ -1,7 +1,7 @@
 import * as THREE from '../lib/three/build/three.module.js';
-import { TWEEN } from '../lib/tween/tween.module.min.js';
-import { TrackballControls } from '../lib/three/jsm/controls/TrackballControls.js';
-import { CSS3DRenderer, CSS3DObject } from '../lib/three/jsm/renderers/CSS3DRenderer.js';
+import { TWEEN } from '../lib/three/examples/jsm/libs/tween.module.min.js';
+import { TrackballControls } from '../lib/three/examples/jsm/controls/TrackballControls.js';
+import { CSS3DRenderer, CSS3DObject } from '../lib/three/examples/jsm/renderers/CSS3DRenderer.js';
 
 var Carousel3D = function carousel3D () {
 
@@ -125,8 +125,8 @@ var Carousel3D = function carousel3D () {
     this.container.appendChild( this.rendererGL.domElement );
 
     //
-
-    // controls = new TrackballControls( camera, this.renderer.domElement );
+    //
+    // controls = new TrackballControls( this.camera, this.renderer.domElement );
 		// controls.minDistance = 200;
 		// controls.maxDistance = 6000;
 		// controls.addEventListener( 'change',  () => { this.render() } );

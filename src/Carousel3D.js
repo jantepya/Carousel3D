@@ -24,53 +24,39 @@ var Carousel3D = function carousel3D () {
 
     this.container = document.getElementById( 'container' );
 
-    camera = new THREE.PerspectiveCamera( 50, this.container.clientWidth / this.container.clientHeight, 1, 10000 );
-    camera.position.z = 300;
-    camera.position.y = 40;
+
+    {
+      // add arrows to container
+      var arrow_left = document.createElement( 'div' );
+      arrow_left.className = 'Carousel3D-Arrow ';
+      var arrow_left_img = document.createElement( 'img' );
+      arrow_left_img.src = "/src/angle-left.png";
+      arrow_left.appendChild(arrow_left_img);
+
+      var arrow_right = document.createElement( 'div' );
+      arrow_right.className = 'Carousel3D-Arrow ';
+      arrow_right.style.right = 0;
+      var arrow_right_img = document.createElement( 'img' );
+      arrow_right_img.src = "/src/angle-right.png";
+      arrow_right.appendChild(arrow_right_img);
+
+      this.container.appendChild(arrow_left);
+      this.container.appendChild(arrow_right);
+    }
 
 
-    scene = new THREE.Scene();
-    sceneGL = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera( 50, this.container.clientWidth / this.container.clientHeight, 1, 10000 );
+    this.camera.position.z = 300;
+    this.camera.position.y = 40;
+
+
+    this.sceneCSS = new THREE.Scene();
+    this.sceneGL = new THREE.Scene();
 
     // create tile elements
     for ( var i = 0; i < table.length; i += 5 ) {
 
       this.createTile(i);
-      // var element = document.createElement( 'div' );
-      // element.className = 'element';
-      // element.style.backgroundColor = 'rgba(0,0,0,0)';
-      //
-      // var number = document.createElement( 'div' );
-      // number.className = 'number';
-      // number.textContent = ( i / 5 ) + 1;
-      // element.appendChild( number );
-      //
-      // var symbol = document.createElement( 'div' );
-      // symbol.className = 'symbol';
-      // symbol.textContent = table[ i ];
-      // element.appendChild( symbol );
-      //
-      // var details = document.createElement( 'div' );
-      // details.className = 'details';
-      // details.innerHTML = table[ i + 1 ] + '<br>' + table[ i + 2 ];
-      // element.appendChild( details );
-      //
-      // var object = new CSS3DObject( element );
-      // object.position.x = ( table[ i + 3 ] * 140 ) - table.length * 15;
-      // object.position.y = - ( table[ i + 4 ] * 180 ) + this.container.clientHeight/2 + 80;
-      // object.position.z = 0;
-      // scene.add( object );
-      //
-      // this.objects.push( object );
-      //
-      //
-      // var geometry = new THREE.PlaneBufferGeometry( 120, 160 );
-			// var mesh = new THREE.Mesh( geometry );
-      // mesh.material.shadowSide = THREE.DoubleSide;
-      // mesh.castShadow = true;
-			// mesh.position.x = ( table[ i + 3 ] * 140 ) - table.length * 15;
-			// mesh.position.y = - ( table[ i + 4 ] * 180 ) + this.container.clientHeight/2 + 80;
-			// sceneGL.add( mesh );
 
       // var object = new THREE.Object3D();
       // object.position.x = ( table[ i + 3 ] * 140 ) - table.length * 15;
@@ -80,14 +66,16 @@ var Carousel3D = function carousel3D () {
 
     }
 
+    {
+      var geometry = new THREE.PlaneGeometry( 10000, 10000 );
+      var material = new THREE.MeshPhongMaterial({color:0xffffff, shininess:100,})
+      var plane = new THREE.Mesh( geometry, material );
+      plane.receiveShadow = true;
+      plane.position.z = -350;
+      plane.rotation.x = 30;
+      this.sceneGL.add( plane );
+    }
 
-    var geometry = new THREE.PlaneGeometry( 10000, 10000 );
-    var material = new THREE.MeshPhongMaterial({color:0xffffff, shininess:100,})
-    var plane = new THREE.Mesh( geometry, material );
-    plane.receiveShadow = true;
-    plane.position.z = -350;
-    plane.rotation.x = 30;
-    sceneGL.add( plane );
     //
     // var ambientLight = new THREE.AmbientLight( 0xcccccc, 0.8 );
 		// sceneGL.add( ambientLight );
@@ -115,7 +103,7 @@ var Carousel3D = function carousel3D () {
     // pointLight.shadow.camera.far = 1000 // default
 
     // pointLight.shadow = new THREE.LightShadow(new THREE.PerspectiveCamera(50, 1, 1, 5000));
-		sceneGL.add( spotLight );
+		this.sceneGL.add( spotLight );
 
 
     // var help = new THREE.CameraHelper( spotLight.shadow.camera )
@@ -164,12 +152,13 @@ var Carousel3D = function carousel3D () {
   }
 
   this.createTile = function createTile( i ) {
+
       var element = document.createElement( 'div' );
       element.className = 'element';
       element.style.backgroundColor = 'rgba(0,0,0,0)';
 
       var number = document.createElement( 'div' );
-      number.className = 'number';
+      number.className = 'number noselect';
       number.textContent = ( i / 5 ) + 1;
       element.appendChild( number );
 
@@ -187,7 +176,7 @@ var Carousel3D = function carousel3D () {
       object.position.x = ( table[ i + 3 ] * 140 ) - table.length * 15;
       object.position.y = - ( table[ i + 4 ] * 180 ) + this.container.clientHeight/2 + 80;
       object.position.z = 0;
-      scene.add( object );
+      this.sceneCSS.add( object );
 
       this.objects.push( object );
 
@@ -198,13 +187,40 @@ var Carousel3D = function carousel3D () {
       mesh.castShadow = true;
       mesh.position.x = ( table[ i + 3 ] * 140 ) - table.length * 15;
       mesh.position.y = - ( table[ i + 4 ] * 180 ) + this.container.clientHeight/2 + 80;
-      sceneGL.add( mesh );
+      this.sceneGL.add( mesh );
 	}
+
+  this.transform = function (targets, duration) {
+
+    TWEEN.removeAll();
+
+    for ( var i = 0; i < objects.length; i ++ ) {
+
+      var object = objects[ i ];
+      var target = targets[ i ];
+
+      new TWEEN.Tween( object.position )
+        .to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
+        .easing( TWEEN.Easing.Exponential.InOut )
+        .start();
+
+      new TWEEN.Tween( object.rotation )
+        .to( { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration )
+        .easing( TWEEN.Easing.Exponential.InOut )
+        .start();
+
+    }
+
+    new TWEEN.Tween( this )
+      .to( {}, duration * 2 )
+      .onUpdate( render )
+      .start();
+  }
 
   this.onWindowResize = function () {
 
-    camera.aspect = this.container.clientWidth / this.container.clientHeight;
-    camera.updateProjectionMatrix();
+    this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
+    this.camera.updateProjectionMatrix();
 
     this.renderer.setSize( this.container.clientWidth, this.container.clientHeight );
     this.rendererGL.setSize( this.container.clientWidth, this.container.clientHeight );
@@ -214,10 +230,8 @@ var Carousel3D = function carousel3D () {
   }
 
   this.render = function () {
-
-    this.renderer.render( scene, camera );
-    this.rendererGL.render( sceneGL, camera )
-
+    this.renderer.render( this.sceneCSS, this.camera );
+    this.rendererGL.render( this.sceneGL, this.camera );
   }
 
 
@@ -236,9 +250,7 @@ var table = [
   "F", "Fluorine", "18.9984032", 9, 1,
 ];
 
-var camera, scene, renderer, camera;
 
-var sceneGL, rendererGL;
 
 var controls;
 
@@ -250,33 +262,7 @@ var targets = [];
 // animate();
 
 
-function transform( targets, duration ) {
 
-  TWEEN.removeAll();
-
-  for ( var i = 0; i < objects.length; i ++ ) {
-
-    var object = objects[ i ];
-    var target = targets[ i ];
-
-    new TWEEN.Tween( object.position )
-      .to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
-      .easing( TWEEN.Easing.Exponential.InOut )
-      .start();
-
-    new TWEEN.Tween( object.rotation )
-      .to( { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration )
-      .easing( TWEEN.Easing.Exponential.InOut )
-      .start();
-
-  }
-
-  new TWEEN.Tween( this )
-    .to( {}, duration * 2 )
-    .onUpdate( render )
-    .start();
-
-}
 
 
 // function render() {

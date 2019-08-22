@@ -141,9 +141,9 @@ var Carousel3D = function carousel3D () {
 
     TWEEN.update();
 
-    if (this.isRotating) {
-      this.rotate(2000);
-    }
+    // if (this.isRotating) {
+    //   this.rotate(2000);
+    // }
 
     controls.update();
 
@@ -155,11 +155,11 @@ var Carousel3D = function carousel3D () {
 
     TWEEN.removeAll();
 
-    for ( var i = 0; i < this.CSSobjects.length; i ++ ) {
+    for ( var i = 1; i < this.CSSobjects.length; i ++ ) {
 
       var objectCSS = this.CSSobjects[ i ];
       var shadowObject = this.ShadowObjects[ i ];
-      var target = this.targets[ this.CSSobjects.length - i - 1 ];
+      var target = this.targets[ i - 1 ];
 
       new TWEEN.Tween( objectCSS.position )
         .to( { x: target.position.x, y: target.position.y, z: target.position.z }, duration )
@@ -170,15 +170,9 @@ var Carousel3D = function carousel3D () {
         .to( { x: target.position.x, y: target.position.y, z: target.position.z }, duration )
         .easing( TWEEN.Easing.Exponential.InOut )
         .start();
-
-      // new TWEEN.Tween( object.rotation )
-      //   .to( { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration )
-      //   .easing( TWEEN.Easing.Exponential.InOut )
-      //   .start();
-
     }
 
-    new TWEEN.Tween( this )
+    new TWEEN.Tween(  )
       .to( {}, duration * 2 )
       .onUpdate( () => { this.render() } )
       .start();
@@ -239,33 +233,33 @@ var Carousel3D = function carousel3D () {
 
       this.targets.push( object );
 	}
-
-  this.transform = function (targets, duration) {
-
-    TWEEN.removeAll();
-
-    for ( var i = 0; i < this.CSSobjects.length; i ++ ) {
-
-      var object = this.CSSobjects[ i ];
-      var target = this.targets[ i ];
-
-      new TWEEN.Tween( object.position )
-        .to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
-        .easing( TWEEN.Easing.Exponential.InOut )
-        .start();
-
-      new TWEEN.Tween( object.rotation )
-        .to( { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration )
-        .easing( TWEEN.Easing.Exponential.InOut )
-        .start();
-
-    }
-
-    new TWEEN.Tween( this )
-      .to( {}, duration * 2 )
-      .onUpdate( () => { this.render() } )
-      .start();
-  }
+  //
+  // this.transform = function (targets, duration) {
+  //
+  //   TWEEN.removeAll();
+  //
+  //   for ( var i = 0; i < this.CSSobjects.length; i ++ ) {
+  //
+  //     var object = this.CSSobjects[ i ];
+  //     var target = this.targets[ i ];
+  //
+  //     new TWEEN.Tween( object.position )
+  //       .to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
+  //       .easing( TWEEN.Easing.Exponential.InOut )
+  //       .start();
+  //
+  //     new TWEEN.Tween( object.rotation )
+  //       .to( { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration )
+  //       .easing( TWEEN.Easing.Exponential.InOut )
+  //       .start();
+  //
+  //   }
+  //
+  //   new TWEEN.Tween( this )
+  //     .to( {}, duration * 2 )
+  //     .onUpdate( () => { this.render() } )
+  //     .start();
+  // }
 
   this.onWindowResize = function () {
 

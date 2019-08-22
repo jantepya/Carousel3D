@@ -4,15 +4,15 @@
 		<title>three.js css3d - periodic table</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<link type="text/css" rel="stylesheet" href="main.css">
-		<link type="text/css" rel="stylesheet" href="/src/Carousel3D.css">
+		<link type="text/css" rel="stylesheet" href="./main.css">
+		<link type="text/css" rel="stylesheet" href="./src/Carousel3D.css">
 		<style>
 
 			#container {
 				/* margin-top:30px; */
 				/* padding: 50px; */
 				width : 100%;
-				height: 400px;
+				height: 300px;
 			}
 
 
@@ -26,6 +26,10 @@
 
 			  color: rgba(127,255,255,0.75);
 				font-size: 24px;
+			}
+
+			body {
+				/* background-color: black; */
 			}
 
 		</style>
@@ -42,7 +46,7 @@
 
 			var tileElements = []
 
-			for (var i = 0; i < 18; i++) {
+			for (var i = 0; i < 12; i++) {
 				var number = document.createElement( 'div' );
 				number.className = 'number';
 				number.textContent = i;

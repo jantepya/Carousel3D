@@ -33,14 +33,14 @@ var Carousel3D = function carousel3D () {
       var arrow_left = document.createElement( 'div' );
       arrow_left.className = 'Carousel3D-Arrow ';
       var arrow_left_img = document.createElement( 'img' );
-      arrow_left_img.src = "/src/angle-left.png";
+      arrow_left_img.src = "./src/angle-left.png";
       arrow_left.appendChild(arrow_left_img);
 
       var arrow_right = document.createElement( 'div' );
       arrow_right.className = 'Carousel3D-Arrow ';
       arrow_right.style.right = 0;
       var arrow_right_img = document.createElement( 'img' );
-      arrow_right_img.src = "/src/angle-right.png";
+      arrow_right_img.src = "./src/angle-right.png";
       arrow_right.appendChild(arrow_right_img);
 
       this.container.appendChild(arrow_left);
@@ -118,10 +118,10 @@ var Carousel3D = function carousel3D () {
 
     //
     //
-    // controls = new TrackballControls( this.camera, this.renderer.domElement );
-		// controls.minDistance = 200;
-		// controls.maxDistance = 6000;
-		// controls.addEventListener( 'change',  () => { this.render() } );
+    controls = new TrackballControls( this.camera, this.renderer.domElement );
+		controls.minDistance = 200;
+		controls.maxDistance = 6000;
+		controls.addEventListener( 'change',  () => { this.render() } );
 
 
     // transform( targets, 2000 );
@@ -142,7 +142,7 @@ var Carousel3D = function carousel3D () {
 
     TWEEN.update();
 
-    // controls.update();
+    controls.update();
   }
 
   this.createTile = function createTile( i ) {

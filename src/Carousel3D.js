@@ -12,11 +12,11 @@ var Carousel3D = function carousel3D () {
   this.renderer = null;
   this.rendererGL = null;
   this.arrowDiv = null;
-  this.tileMaterial = null;
-  this.textSelectable = true;
 
+  this.containerName = "";
+  this.textSelectable = true;
   this.tileBackgroundColor = "black";
-  this.tileMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, shadowSide: THREE.DoubleSide} );
+  this.tileMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, shadowSide: THREE.BackSide} );
   this.tileSize = {
     'w':120,
     'h':160,
@@ -35,11 +35,13 @@ var Carousel3D = function carousel3D () {
 
   this.init = function () {
 
-    this.container = document.getElementById( 'container' );
 
+    this.container = document.getElementById( this.containerName );
 
-
-
+    if (!this.container) {
+      console.warn("Carousel3D: error finding container element.");
+      return;
+    }
 
     this.camera = new THREE.PerspectiveCamera( 50, this.container.clientWidth / this.container.clientHeight, 1, 10000 );
     this.camera.position.z = 300;

@@ -15,7 +15,6 @@
 				height: 250px;
 			}
 
-
 			.number {
 				position: absolute;
 				top: 50%;
@@ -28,13 +27,15 @@
 				font-size: 24px;
 			}
 
+			body {
+				margin: 0;
+			}
 
 		</style>
 	</head>
 	<body>
 
-		<div id="container" >
-		</div>
+		<div id="container" ></div>
 
 		<script type="module" >
 
@@ -52,6 +53,7 @@
 
 
 			var car = new Carousel3D();
+			car.containerName = "container";
 			car.tileElements = tileElements;
 			car.textSelectable = false;
 			car.init();

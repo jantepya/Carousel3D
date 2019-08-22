@@ -1,26 +1,17 @@
 .Carousel3D-Arrow {
   position: absolute;
-  opacity: 0.25;
+  overflow: hidden;
   z-index: 1;
-  /* width:100%; */
 }
 
 .Carousel3D-Arrow.helper.right {
-  /* top: 50%;
-  left: 50%; */
-  /* width: 50%;
-  right:0; */
   right:0;
-  margin: auto;
-  /* right: 0; */
-  background-position:right;
-
 }
 
 .Carousel3D-Arrow.helper {
+  opacity: 0.25;
   height: 100%;
   white-space: nowrap;
-  /* z-index: 20; */
 }
 
 .Carousel3D-Arrow span {
@@ -30,7 +21,6 @@
 }
 
 .Carousel3D-Arrow img {
-
   vertical-align: middle;
 
 }
@@ -61,8 +51,8 @@
 }
 
  .Carousel3D-Tile:hover {
-   width: 130px;
-   height: 170px;
+  width: 130px;
+  height: 170px;
   box-shadow: 0px 0px 12px rgba(0,255,255,0.75);
   border: 1px solid rgba(127,255,255,0.75);
 }

@@ -16,6 +16,7 @@ var Carousel3D = function carousel3D () {
   this.textSelectable = true;
 
   this.tileBackgroundColor = "black";
+  this.tileMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, shadowSide: THREE.DoubleSide} );
   this.tileSize = {
     'w':120,
     'h':160,
@@ -37,59 +38,7 @@ var Carousel3D = function carousel3D () {
     this.container = document.getElementById( 'container' );
 
 
-    {
-      // add arrows to container
-      var arrow_container = document.createElement( 'div' );
-      arrow_container.className = 'Carousel3D-Arrow noselect';
-      arrow_container.style.height = this.container.clientHeight + "px";
-      arrow_container.style.width = this.container.clientWidth + "px";
 
-
-      // left
-      // var arrow_left = document.createElement( 'div' );
-      // arrow_left.className = 'Carousel3D-Arrow noselect';
-      // arrow_left.style.height = this.container.clientHeight + "px";
-
-      var arrow_left_helper = document.createElement( 'div' );
-      arrow_left_helper.className = 'Carousel3D-Arrow helper';
-      arrow_container.appendChild(arrow_left_helper);
-
-      var arrow_left_span = document.createElement( 'span' );
-      arrow_left_helper.appendChild(arrow_left_span);
-
-      var arrow_left_img = document.createElement( 'img' );
-      arrow_left_img.src = "./src/angle-left.png";
-      arrow_left_helper.appendChild(arrow_left_img);
-
-      // --------------------
-      // right
-      // var arrow_right = document.createElement( 'div' );
-      // arrow_right.className = 'Carousel3D-Arrow right noselect';
-      // arrow_right.style.height = this.container.clientHeight + "px";
-      // arrow_right.style.width = this.container.clientWidth + "px";
-      // arrow_right.style.textAlign = 'right';
-
-      var arrow_right_helper = document.createElement( 'div' );
-      arrow_right_helper.className = 'Carousel3D-Arrow helper right';
-      // arrow_right_helper.width = '100%';
-      arrow_container.appendChild(arrow_right_helper);
-
-      var arrow_right_span = document.createElement( 'span' );
-      arrow_right_helper.appendChild(arrow_right_span);
-
-
-      var arrow_right_img = document.createElement( 'img' );
-      arrow_right_img.src = "./src/angle-right.png";
-      arrow_right_helper.appendChild(arrow_right_img);
-
-      // arrow_left.addEventListener( 'mouseover', () => { this.isRotating = true; }  , false );
-      // arrow_left.addEventListener( 'mouseout', () => { this.isRotating = false; }  , false );
-      arrow_left_helper.addEventListener( 'click', () => { this.tileOffset += 1; this.rotate( 500); }  , false );
-      arrow_right_helper.addEventListener( 'click', () => { this.tileOffset -= 1; this.rotate( 500); }  , false );
-
-      this.container.appendChild(arrow_container);
-      this.arrowDiv = arrow_container;
-    }
 
 
     this.camera = new THREE.PerspectiveCamera( 50, this.container.clientWidth / this.container.clientHeight, 1, 10000 );
@@ -121,7 +70,7 @@ var Carousel3D = function carousel3D () {
 
     {
       var geometry = new THREE.PlaneGeometry( 10000, 10000 );
-      var material = new THREE.MeshPhongMaterial({color:0xffffff, shininess:100,})
+      var material = new THREE.MeshPhongMaterial({color:0xffffff, shininess:100})
       var plane = new THREE.Mesh( geometry, material );
       plane.receiveShadow = true;
       plane.rotation.x = -Math.PI/2;
@@ -156,14 +105,58 @@ var Carousel3D = function carousel3D () {
     this.renderer = new CSS3DRenderer();
     this.renderer.setSize( this.container.clientWidth, this.container.clientHeight );
     this.renderer.domElement.style.position = 'absolute';
-    this.container.appendChild( this.renderer.domElement );
+    // this.container.appendChild( this.renderer.domElement );
 
     this.rendererGL = new THREE.WebGLRenderer( {antialias: true});
     this.rendererGL.setPixelRatio( window.devicePixelRatio );
     this.rendererGL.setSize( this.container.clientWidth, this.container.clientHeight );
     this.rendererGL.shadowMap.enabled = true;
 
-    this.container.appendChild( this.rendererGL.domElement );
+
+    {
+      // add arrows to container
+      var arrow_container = document.createElement( 'div' );
+      arrow_container.className = 'Carousel3D-Arrow noselect';
+      arrow_container.style.height = this.container.clientHeight + "px";
+      arrow_container.style.width = this.container.clientWidth + "px";
+
+
+      // --------------------
+      // left arrow
+      var arrow_left_helper = document.createElement( 'div' );
+      arrow_left_helper.className = 'Carousel3D-Arrow helper';
+      arrow_container.appendChild(arrow_left_helper);
+
+      var arrow_left_span = document.createElement( 'span' );
+      arrow_left_helper.appendChild(arrow_left_span);
+
+      var arrow_left_img = document.createElement( 'img' );
+      arrow_left_img.src = "./src/angle-left.png";
+      arrow_left_helper.appendChild(arrow_left_img);
+
+      // --------------------
+      // right arrow
+      var arrow_right_helper = document.createElement( 'div' );
+      arrow_right_helper.className = 'Carousel3D-Arrow helper right';
+      arrow_container.appendChild(arrow_right_helper);
+
+      var arrow_right_span = document.createElement( 'span' );
+      arrow_right_helper.appendChild(arrow_right_span);
+
+      var arrow_right_img = document.createElement( 'img' );
+      arrow_right_img.src = "./src/angle-right.png";
+      arrow_right_helper.appendChild(arrow_right_img);
+
+
+      arrow_left_helper.addEventListener( 'click', () => { this.tileOffset -= 1; this.rotate( 500); }  , false );
+      arrow_right_helper.addEventListener( 'click', () => { this.tileOffset += 1; this.rotate( 500); }  , false );
+
+      arrow_container.appendChild( this.renderer.domElement );
+      this.container.appendChild(arrow_container);
+      this.container.appendChild( this.rendererGL.domElement );
+      this.arrowDiv = arrow_container;
+
+    }
 
     //
     //
@@ -262,8 +255,7 @@ var Carousel3D = function carousel3D () {
 
 
       var geometry = new THREE.PlaneBufferGeometry( 120, 160 );
-      var mesh = new THREE.Mesh( geometry );
-      mesh.material.shadowSide = THREE.DoubleSide;
+      var mesh = new THREE.Mesh( geometry, this.tileMaterial );
       mesh.castShadow = true;
       mesh.position.copy( this.targets[j].position);
       this.sceneGL.add( mesh );

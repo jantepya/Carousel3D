@@ -12,13 +12,17 @@ var Carousel3D = function carousel3D () {
   this.renderer = null;
   this.rendererGL = null;
   this.tileMaterial = null;
+
   this.tileSize = {
     'w':120,
     'h':160,
   };
-  this.objects = [];
+
+  this.CSSobjects = [];
+  this.ShadowObjects = [];
   this.tileElements = [];
   this.targets = [];
+  this.isRotating = false;
 
   // this.containerWidth = 800;
   // this.containerHeight = 300;
@@ -31,17 +35,22 @@ var Carousel3D = function carousel3D () {
     {
       // add arrows to container
       var arrow_left = document.createElement( 'div' );
-      arrow_left.className = 'Carousel3D-Arrow ';
+      arrow_left.className = 'Carousel3D-Arrow noselect';
       var arrow_left_img = document.createElement( 'img' );
       arrow_left_img.src = "./src/angle-left.png";
       arrow_left.appendChild(arrow_left_img);
 
       var arrow_right = document.createElement( 'div' );
-      arrow_right.className = 'Carousel3D-Arrow ';
+      arrow_right.className = 'Carousel3D-Arrow noselect';
       arrow_right.style.right = 0;
       var arrow_right_img = document.createElement( 'img' );
       arrow_right_img.src = "./src/angle-right.png";
       arrow_right.appendChild(arrow_right_img);
+
+      // arrow_left.addEventListener( 'mouseover', () => { this.isRotating = true; }  , false );
+      // arrow_left.addEventListener( 'mouseout', () => { this.isRotating = false; }  , false );
+      arrow_left.addEventListener( 'click', () => { this.rotate( 1000); }  , false );
+
 
       this.container.appendChild(arrow_left);
       this.container.appendChild(arrow_right);
@@ -58,16 +67,9 @@ var Carousel3D = function carousel3D () {
 
     // create tile elements
     for ( var i = 0; i < this.tileElements.length; i += 1 ) {
-
       this.createTile(i);
-
-      // var object = new THREE.Object3D();
-      // object.position.x = ( table[ i + 3 ] * 140 ) - table.length * 15;
-      // object.position.y = - ( table[ i + 4 ] * 180 ) + window.innerHeight/2 - 80;
-      //
-      // targets.push( object );
-
     }
+
 
     {
       var geometry = new THREE.PlaneGeometry( 10000, 10000 );
@@ -131,21 +133,58 @@ var Carousel3D = function carousel3D () {
 
     window.addEventListener( 'resize', () => { this.onWindowResize() }  , false );
 
-
   }
 
 
-  this.animate = animate;
+  this.animate = function () {
 
-  function animate() {
-    requestAnimationFrame( animate );
 
     TWEEN.update();
 
+    if (this.isRotating) {
+      this.rotate(2000);
+    }
+
     controls.update();
+
+    requestAnimationFrame( () => { this.animate() } );
   }
 
-  this.createTile = function createTile( i ) {
+  this.rotate = function (duration) {
+    console.log("Rotate");
+
+    TWEEN.removeAll();
+
+    for ( var i = 0; i < this.CSSobjects.length; i ++ ) {
+
+      var objectCSS = this.CSSobjects[ i ];
+      var shadowObject = this.ShadowObjects[ i ];
+      var target = this.targets[ this.CSSobjects.length - i - 1 ];
+
+      new TWEEN.Tween( objectCSS.position )
+        .to( { x: target.position.x, y: target.position.y, z: target.position.z }, duration )
+        .easing( TWEEN.Easing.Exponential.InOut )
+        .start();
+
+      new TWEEN.Tween( shadowObject.position )
+        .to( { x: target.position.x, y: target.position.y, z: target.position.z }, duration )
+        .easing( TWEEN.Easing.Exponential.InOut )
+        .start();
+
+      // new TWEEN.Tween( object.rotation )
+      //   .to( { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration )
+      //   .easing( TWEEN.Easing.Exponential.InOut )
+      //   .start();
+
+    }
+
+    new TWEEN.Tween( this )
+      .to( {}, duration * 2 )
+      .onUpdate( () => { this.render() } )
+      .start();
+  }
+
+  this.createTile = function ( i ) {
 
 
       var tile = document.createElement( 'div' );
@@ -178,7 +217,7 @@ var Carousel3D = function carousel3D () {
       object.position.z = z ;
       this.sceneCSS.add( object );
 
-      this.objects.push( object );
+      this.CSSobjects.push( object );
 
 
       var geometry = new THREE.PlaneBufferGeometry( 120, 160 );
@@ -189,16 +228,26 @@ var Carousel3D = function carousel3D () {
       mesh.position.y = y;
       mesh.position.z = z ;
       this.sceneGL.add( mesh );
+
+      this.ShadowObjects.push( mesh );
+
+
+      var object = new THREE.Object3D();
+      object.position.x = x;
+      object.position.y = y;
+      object.position.z = z;
+
+      this.targets.push( object );
 	}
 
   this.transform = function (targets, duration) {
 
     TWEEN.removeAll();
 
-    for ( var i = 0; i < objects.length; i ++ ) {
+    for ( var i = 0; i < this.CSSobjects.length; i ++ ) {
 
-      var object = objects[ i ];
-      var target = targets[ i ];
+      var object = this.CSSobjects[ i ];
+      var target = this.targets[ i ];
 
       new TWEEN.Tween( object.position )
         .to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
@@ -214,7 +263,7 @@ var Carousel3D = function carousel3D () {
 
     new TWEEN.Tween( this )
       .to( {}, duration * 2 )
-      .onUpdate( render )
+      .onUpdate( () => { this.render() } )
       .start();
   }
 
@@ -242,8 +291,6 @@ var Carousel3D = function carousel3D () {
 
 var controls;
 
-var objects = [];
-var targets = [];
 
 
 

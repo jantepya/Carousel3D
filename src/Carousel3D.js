@@ -14,6 +14,7 @@ var Carousel3D = function carousel3D () {
   this.tileMaterial = null;
   this.textSelectable = true;
 
+  this.tileBackgroundColor = "black";
   this.tileSize = {
     'w':120,
     'h':160,
@@ -126,7 +127,6 @@ var Carousel3D = function carousel3D () {
     this.renderer = new CSS3DRenderer();
     this.renderer.setSize( this.container.clientWidth, this.container.clientHeight );
     this.renderer.domElement.style.position = 'absolute';
-    this.renderer.domElement.style.top = 0;
     this.container.appendChild( this.renderer.domElement );
 
     this.rendererGL = new THREE.WebGLRenderer( {antialias: true});
@@ -204,7 +204,7 @@ var Carousel3D = function carousel3D () {
   this.createTile = function ( i ) {
 
       var tile = document.createElement( 'div' );
-
+      tile.style.backgroundColor = this.tileBackgroundColor;
       if (this.textSelectable) {
         tile.className = 'Carousel3D-Tile';
       }
@@ -212,7 +212,7 @@ var Carousel3D = function carousel3D () {
         tile.className = 'Carousel3D-Tile noselect';
       }
 
-      tile.style.backgroundColor = 'rgba(0,0,0,1)';
+
 
       try {
         tile.appendChild( this.tileElements[ i ] );

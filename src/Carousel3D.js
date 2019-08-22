@@ -12,6 +12,7 @@ var Carousel3D = function carousel3D () {
   this.renderer = null;
   this.rendererGL = null;
   this.tileMaterial = null;
+  this.textSelectable = true;
 
   this.tileSize = {
     'w':120,
@@ -38,6 +39,7 @@ var Carousel3D = function carousel3D () {
       // add arrows to container
       var arrow_left = document.createElement( 'div' );
       arrow_left.className = 'Carousel3D-Arrow noselect';
+      arrow_left.style.height = this.container.clientHeight + "px";
       var arrow_left_img = document.createElement( 'img' );
       arrow_left_img.src = "./src/angle-left.png";
       arrow_left.appendChild(arrow_left_img);
@@ -45,6 +47,7 @@ var Carousel3D = function carousel3D () {
       var arrow_right = document.createElement( 'div' );
       arrow_right.className = 'Carousel3D-Arrow noselect';
       arrow_right.style.right = 0;
+      arrow_right.style.height = this.container.clientHeight + "px";
       var arrow_right_img = document.createElement( 'img' );
       arrow_right_img.src = "./src/angle-right.png";
       arrow_right.appendChild(arrow_right_img);
@@ -201,7 +204,14 @@ var Carousel3D = function carousel3D () {
   this.createTile = function ( i ) {
 
       var tile = document.createElement( 'div' );
-      tile.className = 'Carousel3D-Tile';
+
+      if (this.textSelectable) {
+        tile.className = 'Carousel3D-Tile';
+      }
+      else {
+        tile.className = 'Carousel3D-Tile noselect';
+      }
+
       tile.style.backgroundColor = 'rgba(0,0,0,1)';
 
       try {

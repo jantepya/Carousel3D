@@ -11,6 +11,7 @@ var Carousel3D = function carousel3D () {
   this.camera = null;
   this.renderer = null;
   this.rendererGL = null;
+  this.arrowDiv = null;
   this.tileMaterial = null;
   this.textSelectable = true;
 
@@ -38,28 +39,56 @@ var Carousel3D = function carousel3D () {
 
     {
       // add arrows to container
-      var arrow_left = document.createElement( 'div' );
-      arrow_left.className = 'Carousel3D-Arrow noselect';
-      arrow_left.style.height = this.container.clientHeight + "px";
+      var arrow_container = document.createElement( 'div' );
+      arrow_container.className = 'Carousel3D-Arrow noselect';
+      arrow_container.style.height = this.container.clientHeight + "px";
+      arrow_container.style.width = this.container.clientWidth + "px";
+
+
+      // left
+      // var arrow_left = document.createElement( 'div' );
+      // arrow_left.className = 'Carousel3D-Arrow noselect';
+      // arrow_left.style.height = this.container.clientHeight + "px";
+
+      var arrow_left_helper = document.createElement( 'div' );
+      arrow_left_helper.className = 'Carousel3D-Arrow helper';
+      arrow_container.appendChild(arrow_left_helper);
+
+      var arrow_left_span = document.createElement( 'span' );
+      arrow_left_helper.appendChild(arrow_left_span);
+
       var arrow_left_img = document.createElement( 'img' );
       arrow_left_img.src = "./src/angle-left.png";
-      arrow_left.appendChild(arrow_left_img);
+      arrow_left_helper.appendChild(arrow_left_img);
 
-      var arrow_right = document.createElement( 'div' );
-      arrow_right.className = 'Carousel3D-Arrow noselect';
-      arrow_right.style.right = 0;
-      arrow_right.style.height = this.container.clientHeight + "px";
+      // --------------------
+      // right
+      // var arrow_right = document.createElement( 'div' );
+      // arrow_right.className = 'Carousel3D-Arrow right noselect';
+      // arrow_right.style.height = this.container.clientHeight + "px";
+      // arrow_right.style.width = this.container.clientWidth + "px";
+      // arrow_right.style.textAlign = 'right';
+
+      var arrow_right_helper = document.createElement( 'div' );
+      arrow_right_helper.className = 'Carousel3D-Arrow helper right';
+      // arrow_right_helper.width = '100%';
+      arrow_container.appendChild(arrow_right_helper);
+
+      var arrow_right_span = document.createElement( 'span' );
+      arrow_right_helper.appendChild(arrow_right_span);
+
+
       var arrow_right_img = document.createElement( 'img' );
       arrow_right_img.src = "./src/angle-right.png";
-      arrow_right.appendChild(arrow_right_img);
+      arrow_right_helper.appendChild(arrow_right_img);
 
       // arrow_left.addEventListener( 'mouseover', () => { this.isRotating = true; }  , false );
       // arrow_left.addEventListener( 'mouseout', () => { this.isRotating = false; }  , false );
-      arrow_left.addEventListener( 'click', () => { this.tileOffset += 1; this.rotate( 500); }  , false );
-      arrow_right.addEventListener( 'click', () => { this.tileOffset -= 1; this.rotate( 500); }  , false );
+      arrow_left_helper.addEventListener( 'click', () => { this.tileOffset += 1; this.rotate( 500); }  , false );
+      arrow_right_helper.addEventListener( 'click', () => { this.tileOffset -= 1; this.rotate( 500); }  , false );
 
-      this.container.appendChild(arrow_left);
-      this.container.appendChild(arrow_right);
+      this.container.appendChild(arrow_container);
+      this.arrowDiv = arrow_container;
     }
 
 
@@ -251,8 +280,10 @@ var Carousel3D = function carousel3D () {
     this.renderer.setSize( this.container.clientWidth, this.container.clientHeight );
     this.rendererGL.setSize( this.container.clientWidth, this.container.clientHeight );
 
-    this.render();
+    this.arrowDiv.style.height = this.container.clientHeight + "px";
+    this.arrowDiv.style.width = this.container.clientWidth + "px";
 
+    this.render();
   }
 
   this.render = function () {

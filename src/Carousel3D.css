@@ -1,13 +1,42 @@
 .Carousel3D-Arrow {
   position: absolute;
-  /* height: 300px; */
-  opacity: 0.1;
-  z-index: 5;
-  /* right:0; */
+  opacity: 0.25;
+  z-index: 1;
+  /* width:100%; */
 }
 
-.Carousel3D-Arrow:hover {
-  opacity: 0.3;
+.Carousel3D-Arrow.helper.right {
+  /* top: 50%;
+  left: 50%; */
+  /* width: 50%;
+  right:0; */
+  right:0;
+  margin: auto;
+  /* right: 0; */
+  background-position:right;
+
+}
+
+.Carousel3D-Arrow.helper {
+  height: 100%;
+  white-space: nowrap;
+  /* z-index: 20; */
+}
+
+.Carousel3D-Arrow span {
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.Carousel3D-Arrow img {
+
+  vertical-align: middle;
+
+}
+
+.Carousel3D-Arrow.helper:hover {
+  opacity: 0.45;
 }
 
 .noselect {

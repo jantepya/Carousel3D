@@ -76,11 +76,9 @@ var Carousel3D = function carousel3D () {
       this.sceneGL.add( plane );
     }
 
-    //
     // var ambientLight = new THREE.AmbientLight( 0xcccccc, 0.8 );
 		// sceneGL.add( ambientLight );
 
-    // var pointLight = new THREE.PointLight( 0xffff00, 1.0 );
     var spotLight = new THREE.SpotLight( 0xffffff, 0.5 );
     spotLight.position.set( 0, 250, -200 );
 
@@ -94,17 +92,7 @@ var Carousel3D = function carousel3D () {
     spotLight.shadow.camera.fov = 30;
     spotLight.penumbra = 1;
 
-		// var pointLight = new THREE.PointLight( 0xffff00, 1.0 );
-    // pointLight.position.set( 0, 100, 100);
-    // pointLight.castShadow = true; // default false
-    // pointLight.shadow.mapSize.width = 1024; // default
-    // pointLight.shadow.mapSize.height = 1024; // default
-    // pointLight.shadow.camera.near = 1; // default
-    // pointLight.shadow.camera.far = 1000 // default
-
-    // pointLight.shadow = new THREE.LightShadow(new THREE.PerspectiveCamera(50, 1, 1, 5000));
 		this.sceneGL.add( spotLight );
-
 
     // var help = new THREE.CameraHelper( spotLight.shadow.camera )
     // sceneGL.add( help );
@@ -153,9 +141,11 @@ var Carousel3D = function carousel3D () {
 
   this.createTile = function createTile( i ) {
 
+
+
       var element = document.createElement( 'div' );
       element.className = 'element';
-      element.style.backgroundColor = 'rgba(0,0,0,0)';
+      element.style.backgroundColor = 'rgba(0,0,0,1)';
 
       var number = document.createElement( 'div' );
       number.className = 'number noselect';
@@ -172,10 +162,20 @@ var Carousel3D = function carousel3D () {
       details.innerHTML = table[ i + 1 ] + '<br>' + table[ i + 2 ];
       element.appendChild( details );
 
+
+      var u = Math.floor(table.length / 2);
+      var std = 81;
+
+      var x = ( table[ i + 3 ] * 140 ) - table.length * 15;
+      var y = - ( table[ i + 4 ] * 180 ) + this.container.clientHeight/2 + 80;
+      // var z = 3000* Math.pow(Math.E, Math.pow(i - u, 2)/(-2*std))/(Math.sqrt(2*Math.PI*std)) ;
+      var z = Math.sqrt(1200000 - Math.pow((x-25), 2)) - 1000;
+      console.log(x, z);
+
       var object = new CSS3DObject( element );
-      object.position.x = ( table[ i + 3 ] * 140 ) - table.length * 15;
-      object.position.y = - ( table[ i + 4 ] * 180 ) + this.container.clientHeight/2 + 80;
-      object.position.z = 0;
+      object.position.x = x;
+      object.position.y = y;
+      object.position.z = z ;
       this.sceneCSS.add( object );
 
       this.objects.push( object );
@@ -185,8 +185,9 @@ var Carousel3D = function carousel3D () {
       var mesh = new THREE.Mesh( geometry );
       mesh.material.shadowSide = THREE.DoubleSide;
       mesh.castShadow = true;
-      mesh.position.x = ( table[ i + 3 ] * 140 ) - table.length * 15;
-      mesh.position.y = - ( table[ i + 4 ] * 180 ) + this.container.clientHeight/2 + 80;
+      mesh.position.x = x;
+      mesh.position.y = y;
+      mesh.position.z = z ;
       this.sceneGL.add( mesh );
 	}
 
@@ -257,20 +258,6 @@ var controls;
 var objects = [];
 var targets = [];
 
-
-// init();
-// animate();
-
-
-
-
-
-// function render() {
-//
-//   renderer.render( scene, camera );
-//   rendererGL.render( sceneGL, camera );
-//
-// }
 
 
 export { Carousel3D };

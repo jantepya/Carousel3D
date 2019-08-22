@@ -118,10 +118,10 @@ var Carousel3D = function carousel3D () {
 
     //
     //
-    controls = new TrackballControls( this.camera, this.renderer.domElement );
-		controls.minDistance = 200;
-		controls.maxDistance = 6000;
-		controls.addEventListener( 'change',  () => { this.render() } );
+    // controls = new TrackballControls( this.camera, this.renderer.domElement );
+		// controls.minDistance = 200;
+		// controls.maxDistance = 6000;
+		// controls.addEventListener( 'change',  () => { this.render() } );
 
 
     // transform( targets, 2000 );
@@ -142,7 +142,7 @@ var Carousel3D = function carousel3D () {
 
     TWEEN.update();
 
-    controls.update();
+    // controls.update();
   }
 
   this.createTile = function createTile( i ) {
@@ -163,11 +163,11 @@ var Carousel3D = function carousel3D () {
       }
 
 
-      var u = Math.floor(this.tileElements.length / 2);
-      var std = 81;
+      // var u = Math.floor(this.tileElements.length / 2);
+      // var std = 81;
 
       var x = ( (i+1) * 140 ) - this.tileElements.length * 70;
-      var y = - (   180 ) + this.container.clientHeight/2 + 80;
+      var y =   45  ;
       // var z = 3000* Math.pow(Math.E, Math.pow(i - u, 2)/(-2*std))/(Math.sqrt(2*Math.PI*std)) ;
       var z = Math.sqrt(1200000 - Math.pow((x-25), 2)) - 1000;
       // console.log(x, z);
@@ -238,19 +238,6 @@ var Carousel3D = function carousel3D () {
 
 }
 
-
-// var table = [
-//   "H", "Hydrogen", "1.00794", 1, 1,
-//   "He", "Helium", "4.002602", 2, 1,
-//   "Li", "Lithium", "6.941", 3, 1,
-//   "Be", "Beryllium", "9.012182", 4, 1,
-//   "B", "Boron", "10.811", 5, 1,
-//   "C", "Carbon", "12.0107", 6, 1,
-//   "N", "Nitrogen", "14.0067", 7, 1,
-//   "O", "Oxygen", "15.9994", 8, 1,
-//   "F", "Fluorine", "18.9984032", 9, 1,
-// ];
-//
 
 
 var controls;

@@ -24,6 +24,8 @@ var Carousel3D = function carousel3D () {
   this.targets = [];
   this.isRotating = false;
 
+  this.tileOffset = 0;
+
   // this.containerWidth = 800;
   // this.containerHeight = 300;
 
@@ -49,8 +51,8 @@ var Carousel3D = function carousel3D () {
 
       // arrow_left.addEventListener( 'mouseover', () => { this.isRotating = true; }  , false );
       // arrow_left.addEventListener( 'mouseout', () => { this.isRotating = false; }  , false );
-      arrow_left.addEventListener( 'click', () => { this.rotate( 1000); }  , false );
-
+      arrow_left.addEventListener( 'click', () => { this.tileOffset += 1; this.rotate( 500); }  , false );
+      arrow_right.addEventListener( 'click', () => { this.tileOffset -= 1; this.rotate( 500); }  , false );
 
       this.container.appendChild(arrow_left);
       this.container.appendChild(arrow_right);
@@ -64,6 +66,21 @@ var Carousel3D = function carousel3D () {
 
     this.sceneCSS = new THREE.Scene();
     this.sceneGL = new THREE.Scene();
+
+    // create target positions
+    for ( var i = 0; i < 12; i += 1 ) {
+
+      var x = (i+1) * 140  - 12 * 70; // 12 is the number of displayed tiles.
+      var y = 45;
+      var z = Math.sqrt(1200000 - Math.pow((x-25), 2)) - 1000;
+
+      var object = new THREE.Object3D();
+      object.position.x = x;
+      object.position.y = y;
+      object.position.z = z;
+
+      this.targets.push( object );
+    }
 
     // create tile elements
     for ( var i = 0; i < this.tileElements.length; i += 1 ) {
@@ -138,28 +155,25 @@ var Carousel3D = function carousel3D () {
 
   this.animate = function () {
 
-
     TWEEN.update();
-
-    // if (this.isRotating) {
-    //   this.rotate(2000);
-    // }
 
     controls.update();
 
     requestAnimationFrame( () => { this.animate() } );
   }
 
+
   this.rotate = function (duration) {
     console.log("Rotate");
 
     TWEEN.removeAll();
 
-    for ( var i = 1; i < this.CSSobjects.length; i ++ ) {
+
+    for ( var i = Math.abs(this.tileOffset); i < this.targets.length; i ++ ) {
 
       var objectCSS = this.CSSobjects[ i ];
       var shadowObject = this.ShadowObjects[ i ];
-      var target = this.targets[ i - 1 ];
+      var target = this.targets[ i - this.tileOffset ];
 
       new TWEEN.Tween( objectCSS.position )
         .to( { x: target.position.x, y: target.position.y, z: target.position.z }, duration )
@@ -180,14 +194,10 @@ var Carousel3D = function carousel3D () {
 
   this.createTile = function ( i ) {
 
-
       var tile = document.createElement( 'div' );
       tile.className = 'Carousel3D-Tile';
       tile.style.backgroundColor = 'rgba(0,0,0,1)';
 
-      // var number = document.createElement( 'div' );
-      // number.className = 'number noselect';
-      // number.textContent = ( i / 5 ) + 1;
       try {
         tile.appendChild( this.tileElements[ i ] );
       }
@@ -196,21 +206,14 @@ var Carousel3D = function carousel3D () {
       }
 
 
-      // var u = Math.floor(this.tileElements.length / 2);
-      // var std = 81;
-
-      var x = ( (i+1) * 140 ) - this.tileElements.length * 70;
-      var y =   45  ;
-      // var z = 3000* Math.pow(Math.E, Math.pow(i - u, 2)/(-2*std))/(Math.sqrt(2*Math.PI*std)) ;
-      var z = Math.sqrt(1200000 - Math.pow((x-25), 2)) - 1000;
-      // console.log(x, z);
+      var j = i;
+      if ( j > 11) {
+        j = 11;
+      }
 
       var object = new CSS3DObject( tile );
-      object.position.x = x;
-      object.position.y = y;
-      object.position.z = z ;
+      object.position.copy( this.targets[j].position );
       this.sceneCSS.add( object );
-
       this.CSSobjects.push( object );
 
 
@@ -218,48 +221,13 @@ var Carousel3D = function carousel3D () {
       var mesh = new THREE.Mesh( geometry );
       mesh.material.shadowSide = THREE.DoubleSide;
       mesh.castShadow = true;
-      mesh.position.x = x;
-      mesh.position.y = y;
-      mesh.position.z = z ;
+      mesh.position.copy( this.targets[j].position);
       this.sceneGL.add( mesh );
 
       this.ShadowObjects.push( mesh );
 
-
-      var object = new THREE.Object3D();
-      object.position.x = x;
-      object.position.y = y;
-      object.position.z = z;
-
-      this.targets.push( object );
 	}
-  //
-  // this.transform = function (targets, duration) {
-  //
-  //   TWEEN.removeAll();
-  //
-  //   for ( var i = 0; i < this.CSSobjects.length; i ++ ) {
-  //
-  //     var object = this.CSSobjects[ i ];
-  //     var target = this.targets[ i ];
-  //
-  //     new TWEEN.Tween( object.position )
-  //       .to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
-  //       .easing( TWEEN.Easing.Exponential.InOut )
-  //       .start();
-  //
-  //     new TWEEN.Tween( object.rotation )
-  //       .to( { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration )
-  //       .easing( TWEEN.Easing.Exponential.InOut )
-  //       .start();
-  //
-  //   }
-  //
-  //   new TWEEN.Tween( this )
-  //     .to( {}, duration * 2 )
-  //     .onUpdate( () => { this.render() } )
-  //     .start();
-  // }
+
 
   this.onWindowResize = function () {
 
@@ -277,7 +245,6 @@ var Carousel3D = function carousel3D () {
     this.renderer.render( this.sceneCSS, this.camera );
     this.rendererGL.render( this.sceneGL, this.camera );
   }
-
 
 }
 

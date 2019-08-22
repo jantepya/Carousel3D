@@ -17,8 +17,11 @@ var Carousel3D = function carousel3D () {
     'h':160,
   };
   this.objects = [];
-  this.table = [];
+  this.tileElements = [];
   this.targets = [];
+
+  // this.containerWidth = 800;
+  // this.containerHeight = 300;
 
   this.init = function () {
 
@@ -54,7 +57,7 @@ var Carousel3D = function carousel3D () {
     this.sceneGL = new THREE.Scene();
 
     // create tile elements
-    for ( var i = 0; i < table.length; i += 5 ) {
+    for ( var i = 0; i < this.tileElements.length; i += 1 ) {
 
       this.createTile(i);
 
@@ -71,8 +74,9 @@ var Carousel3D = function carousel3D () {
       var material = new THREE.MeshPhongMaterial({color:0xffffff, shininess:100,})
       var plane = new THREE.Mesh( geometry, material );
       plane.receiveShadow = true;
-      plane.position.z = -350;
-      plane.rotation.x = 30;
+      plane.rotation.x = -Math.PI/2;
+      plane.position.y = -50;
+
       this.sceneGL.add( plane );
     }
 
@@ -114,17 +118,19 @@ var Carousel3D = function carousel3D () {
 
     //
     //
-    // controls = new TrackballControls( this.camera, this.renderer.domElement );
-		// controls.minDistance = 200;
-		// controls.maxDistance = 6000;
-		// controls.addEventListener( 'change',  () => { this.render() } );
+    controls = new TrackballControls( this.camera, this.renderer.domElement );
+		controls.minDistance = 200;
+		controls.maxDistance = 6000;
+		controls.addEventListener( 'change',  () => { this.render() } );
 
 
     // transform( targets, 2000 );
     this.render();
+    this.animate();
     //
 
     window.addEventListener( 'resize', () => { this.onWindowResize() }  , false );
+
 
   }
 
@@ -136,43 +142,37 @@ var Carousel3D = function carousel3D () {
 
     TWEEN.update();
 
-    // controls.update();
+    controls.update();
   }
 
   this.createTile = function createTile( i ) {
 
 
+      var tile = document.createElement( 'div' );
+      tile.className = 'Carousel3D-Tile';
+      tile.style.backgroundColor = 'rgba(0,0,0,1)';
 
-      var element = document.createElement( 'div' );
-      element.className = 'element';
-      element.style.backgroundColor = 'rgba(0,0,0,1)';
-
-      var number = document.createElement( 'div' );
-      number.className = 'number noselect';
-      number.textContent = ( i / 5 ) + 1;
-      element.appendChild( number );
-
-      var symbol = document.createElement( 'div' );
-      symbol.className = 'symbol';
-      symbol.textContent = table[ i ];
-      element.appendChild( symbol );
-
-      var details = document.createElement( 'div' );
-      details.className = 'details';
-      details.innerHTML = table[ i + 1 ] + '<br>' + table[ i + 2 ];
-      element.appendChild( details );
+      // var number = document.createElement( 'div' );
+      // number.className = 'number noselect';
+      // number.textContent = ( i / 5 ) + 1;
+      try {
+        tile.appendChild( this.tileElements[ i ] );
+      }
+      catch(err) {
+        console.warn("Carousel3D:", err.message);;
+      }
 
 
-      var u = Math.floor(table.length / 2);
+      var u = Math.floor(this.tileElements.length / 2);
       var std = 81;
 
-      var x = ( table[ i + 3 ] * 140 ) - table.length * 15;
-      var y = - ( table[ i + 4 ] * 180 ) + this.container.clientHeight/2 + 80;
+      var x = ( (i+1) * 140 ) - this.tileElements.length * 70;
+      var y = - (   180 ) + this.container.clientHeight/2 + 80;
       // var z = 3000* Math.pow(Math.E, Math.pow(i - u, 2)/(-2*std))/(Math.sqrt(2*Math.PI*std)) ;
       var z = Math.sqrt(1200000 - Math.pow((x-25), 2)) - 1000;
-      console.log(x, z);
+      // console.log(x, z);
 
-      var object = new CSS3DObject( element );
+      var object = new CSS3DObject( tile );
       object.position.x = x;
       object.position.y = y;
       object.position.z = z ;
@@ -239,18 +239,18 @@ var Carousel3D = function carousel3D () {
 }
 
 
-var table = [
-  "H", "Hydrogen", "1.00794", 1, 1,
-  "He", "Helium", "4.002602", 2, 1,
-  "Li", "Lithium", "6.941", 3, 1,
-  "Be", "Beryllium", "9.012182", 4, 1,
-  "B", "Boron", "10.811", 5, 1,
-  "C", "Carbon", "12.0107", 6, 1,
-  "N", "Nitrogen", "14.0067", 7, 1,
-  "O", "Oxygen", "15.9994", 8, 1,
-  "F", "Fluorine", "18.9984032", 9, 1,
-];
-
+// var table = [
+//   "H", "Hydrogen", "1.00794", 1, 1,
+//   "He", "Helium", "4.002602", 2, 1,
+//   "Li", "Lithium", "6.941", 3, 1,
+//   "Be", "Beryllium", "9.012182", 4, 1,
+//   "B", "Boron", "10.811", 5, 1,
+//   "C", "Carbon", "12.0107", 6, 1,
+//   "N", "Nitrogen", "14.0067", 7, 1,
+//   "O", "Oxygen", "15.9994", 8, 1,
+//   "F", "Fluorine", "18.9984032", 9, 1,
+// ];
+//
 
 
 var controls;

@@ -20,7 +20,7 @@
                                   supported by Chrome and Opera */
 }
 
-.element {
+.Carousel3D-Tile {
   width: 120px;
   height: 160px;
   box-shadow: 0px 0px 12px rgba(0,255,255,0.5);
@@ -31,7 +31,7 @@
   cursor: default;
 }
 
- .element:hover {
+ .Carousel3D-Tile:hover {
    width: 130px;
    height: 170px;
   box-shadow: 0px 0px 12px rgba(0,255,255,0.75);

@@ -1,5 +1,5 @@
 # Carousel3D
-Carousel3D is an interactive 3D carousel made with ThreeJS. The Carousel3D object uses the ThreeJS CSS3DRenderer to display 3D tiles. Each tile is actually just an HTML \<div\> element so you should be able to generate and load your own HTML elements, such as images, videos, or text.
+Carousel3D is an interactive 3D HTML/JS carousel made with ThreeJS. The Carousel3D object uses the ThreeJS CSS3DRenderer to display 3D tiles. Each tile is actually just an HTML \<div\> element so you should be able to generate and load your own HTML elements, such as images, videos, or text.
 
 ## Example
 

@@ -1,5 +1,11 @@
 # Carousel3D
-Carousel3D is a interactive 3D carousel made with ThreeJS. The Carousel3D object uses the ThreeJS CSS3DRenderer to display tiles. Each tile is actually just an HTML \<div\> element. For each tile, you should be able to generate and load your own HTML items, such as images, videos, or text.
+Carousel3D is an interactive 3D carousel made with ThreeJS. The Carousel3D object uses the ThreeJS CSS3DRenderer to display 3D tiles. Each tile is actually just an HTML \<div\> element so you should be able to generate and load your own HTML elements, such as images, videos, or text.
+
+## Demo
+
+Try it out here: https://jantepya.github.io/Carousel3D/
+
+
 
 ## Getting Started
 
@@ -10,12 +16,22 @@ Carousel3D is a interactive 3D carousel made with ThreeJS. The Carousel3D object
 ```
 
 ### Create Carousel3D Instance
-
+Create a new instance of Carousel3D:
 ```Javascript
 var car = new Carousel3D();
 ```
 
-Each tile is actually just an HTML \<div\> element. So for each tile, you need to generate the HTML contents of the tile.
+In your HTML file, you need to have a \<div\> container to load Carousel3D.
+###### Html:
+```HTML
+<div id="container" ></div>
+```
+###### Javascript:
+```Javascript
+car.containerName = "container";
+```
+
+Each tile in Carousel3D is actually just a \<div\> element. You need to provide the HTML contents for each tile. The following example creates 15 tiles with just plain text numbers on them.
 
 ```Javascript
 var tileElements = []
@@ -42,7 +58,3 @@ python3 -m http.server --bind 127.0.0.1
 ```
 You should now be able access the project in your browser at http://127.0.0.1:8000/index.html.
 
-
-## Demo
-
-Try it out here: https://jantepya.github.io/Carousel3D/

@@ -1,7 +1,8 @@
 import * as THREE from '../lib/three/build/three.module.js';
 import { TWEEN } from '../lib/three/examples/jsm/libs/tween.module.min.js';
-import { TrackballControls } from '../lib/three/examples/jsm/controls/TrackballControls.js';
 import { CSS3DRenderer, CSS3DObject } from '../lib/three/examples/jsm/renderers/CSS3DRenderer.js';
+// import { TrackballControls } from '../lib/three/examples/jsm/controls/TrackballControls.js';
+
 
 var Carousel3D = function carousel3D () {
 
@@ -65,7 +66,14 @@ var Carousel3D = function carousel3D () {
     }
 
     // create tile elements
-    for ( var i = 0; i < this.tileElements.length; i += 1 ) {
+    // var offset = 0;
+    if (this.tileElements.length < this.targets.length) {
+      var offset = Math.floor((this.targets.length - this.tileElements.length) / 2);
+      this.tileOffset = -offset;
+    }
+
+
+    for (var i = 0; i < this.tileElements.length; i += 1 ) {
       this.createTile(i);
     }
 
@@ -190,17 +198,37 @@ var Carousel3D = function carousel3D () {
 
     //TWEEN.removeAll();
 
-    // make sure only 12 tiles are moving
+    // make sure at most only 12 tiles are moving
     var limit = this.targets.length + this.tileOffset;
+
     if (limit > this.CSSobjects.length)
       limit = this.CSSobjects.length;
 
+    // starting tile index can't be less than 0
     var start = this.tileOffset > 0 ? this.tileOffset : 0;
 
-    if (limit - start <= this.targets.length/2) {
+    // don't rotate if all tiles pass the center point
+
+    if ( this.CSSobjects.length <= this.targets.length/2 ) {
+      var bounds = Math.floor( this.CSSobjects.length / 2) ;
+      var center = - Math.floor((this.targets.length - this.tileElements.length) / 2);
+
+      if ( this.tileOffset > center + bounds ) {
+        this.tileOffset -= 1;
+        return;
+      }
+      else if (this.tileOffset < center - bounds + 1 ) {
+        this.tileOffset -= Math.sign(this.tileOffset);
+        return;
+      }
+    }
+    else if (limit - start <= this.targets.length/2 ) {
       this.tileOffset -= Math.sign(this.tileOffset);
       return;
     }
+
+
+
 
     for ( var i = start; i < limit; i ++ ) {
 
@@ -225,7 +253,7 @@ var Carousel3D = function carousel3D () {
       .start();
   }
 
-  this.createTile = function ( i ) {
+  this.createTile = function ( i , offset ) {
 
       var tile = document.createElement( 'div' );
       tile.style.backgroundColor = this.tileBackgroundColor;
@@ -251,7 +279,7 @@ var Carousel3D = function carousel3D () {
       }
 
       var object = new CSS3DObject( tile );
-      object.position.copy( this.targets[j].position );
+      object.position.copy( this.targets[ j - this.tileOffset ].position );
       this.sceneCSS.add( object );
       this.CSSobjects.push( object );
 
@@ -259,7 +287,7 @@ var Carousel3D = function carousel3D () {
       var geometry = new THREE.PlaneBufferGeometry( 120, 160 );
       var mesh = new THREE.Mesh( geometry, this.tileMaterial );
       mesh.castShadow = true;
-      mesh.position.copy( this.targets[j].position);
+      mesh.position.copy( this.targets[ j - this.tileOffset ].position);
       this.sceneGL.add( mesh );
       this.ShadowObjects.push( mesh );
 
@@ -287,11 +315,7 @@ var Carousel3D = function carousel3D () {
 
 }
 
-
-
 var controls;
-
-
 
 
 export { Carousel3D };

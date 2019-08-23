@@ -22,12 +22,12 @@ var car = new Carousel3D();
 ```
 
 In your HTML file, you need to have a \<div\> container to load Carousel3D.
-###### Html:
 ```HTML
+<!-- HTML -->
 <div id="container" ></div>
 ```
-###### Javascript:
 ```Javascript
+// Javascript
 car.containerName = "container";
 ```
 

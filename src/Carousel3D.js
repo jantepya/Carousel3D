@@ -13,6 +13,11 @@ var Carousel3D = function carousel3D () {
   this.renderer = null;
   this.rendererGL = null;
   this.arrowDiv = null;
+  this.targets = [];
+  this.CSSobjects = [];
+  this.ShadowObjects = [];
+  this.tileOffset = 0;
+
 
   this.containerName = "";
   this.textSelectable = true;
@@ -22,17 +27,12 @@ var Carousel3D = function carousel3D () {
     'w':120,
     'h':160,
   };
-
-  this.CSSobjects = [];
-  this.ShadowObjects = [];
+  this.tileMargin = 20;
   this.tileElements = [];
-  this.targets = [];
-  this.isRotating = false;
+  this.planeHeight = -50;
 
-  this.tileOffset = 0;
 
-  // this.containerWidth = 800;
-  // this.containerHeight = 300;
+
 
   this.init = function () {
 
@@ -53,9 +53,10 @@ var Carousel3D = function carousel3D () {
     this.sceneGL = new THREE.Scene();
 
     // create target positions
+    var w = (this.tileSize.w + this.tileMargin);
     for ( var i = 0; i < 12; i += 1 ) {
 
-      var x = (i+1) * 140  - 12 * 70; // 12 is the default number of displayed tiles.
+      var x = (i+1) * w - 6 * w; // 12 is the default number of displayed tiles. Multiply by 6 becaue 12 / 2
       var y = 45;
       var z = Math.sqrt(1200000 - Math.pow((x-25), 2)) - 1000; // equation for circle
 
@@ -84,7 +85,7 @@ var Carousel3D = function carousel3D () {
       var plane = new THREE.Mesh( geometry, material );
       plane.receiveShadow = true;
       plane.rotation.x = -Math.PI/2;
-      plane.position.y = -50;
+      plane.position.y = this.planeHeight;
 
       this.sceneGL.add( plane );
     }
@@ -259,6 +260,8 @@ var Carousel3D = function carousel3D () {
 
       var tile = document.createElement( 'div' );
       tile.style.backgroundColor = this.tileBackgroundColor;
+      tile.style.width = this.tileSize.w + "px";
+      tile.style.height = this.tileSize.h + "px";
       if (this.textSelectable) {
         tile.className = 'Carousel3D-Tile';
       }

@@ -289,7 +289,7 @@ var Carousel3D = function carousel3D () {
       this.CSSobjects.push( object );
 
 
-      var geometry = new THREE.PlaneBufferGeometry( 120, 160 );
+      var geometry = new THREE.PlaneBufferGeometry( this.tileSize.w, this.tileSize.h );
       var mesh = new THREE.Mesh( geometry, this.tileMaterial );
       mesh.castShadow = true;
       mesh.position.copy( this.targets[ j - this.tileOffset ].position);

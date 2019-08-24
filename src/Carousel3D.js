@@ -29,10 +29,12 @@ var Carousel3D = function carousel3D () {
   };
   this.tileMargin = 20;
   this.tileElements = [];
-  this.planeHeight = -50;
-
-
-
+  this.planeHeight = -46;
+  this.backgroundColor = 0x000000;
+  this.planeColor = 0xffffff;
+  this.ambientLight = false;
+  this.cameraZoom = 0;
+  this.cameraHeight = 40;
 
   this.init = function () {
 
@@ -45,20 +47,29 @@ var Carousel3D = function carousel3D () {
     }
 
     this.camera = new THREE.PerspectiveCamera( 50, this.container.clientWidth / this.container.clientHeight, 1, 10000 );
-    this.camera.position.z = 300;
-    this.camera.position.y = 40;
+    this.camera.position.z = 300 - this.cameraZoom;
+    this.camera.position.y = this.cameraHeight;
 
 
     this.sceneCSS = new THREE.Scene();
     this.sceneGL = new THREE.Scene();
+    this.sceneGL.background = new THREE.Color( this.backgroundColor );
+
+    if (this.ambientLight) {
+      var light = new THREE.AmbientLight( 0xaaaaaa ); // soft white light
+      this.sceneGL.add( light );
+
+      this.sceneGL.fog = new THREE.Fog(this.backgroundColor, 70, 2500);
+    }
 
     // create target positions
+    var circleRadius = 10000*this.tileSize.w;
     var w = (this.tileSize.w + this.tileMargin);
     for ( var i = 0; i < 12; i += 1 ) {
 
       var x = (i+1) * w - 6 * w; // 12 is the default number of displayed tiles. Multiply by 6 becaue 12 / 2
       var y = 45;
-      var z = Math.sqrt(1200000 - Math.pow((x-25), 2)) - 1000; // equation for circle
+      var z = Math.sqrt(circleRadius - Math.pow((x-25), 2)) - 1000; // equation for circle
 
       var object = new THREE.Object3D();
       object.position.set( x, y , z);
@@ -81,7 +92,7 @@ var Carousel3D = function carousel3D () {
 
     {
       var geometry = new THREE.PlaneGeometry( 10000, 10000 );
-      var material = new THREE.MeshPhongMaterial({color:0xffffff, shininess:100})
+      var material = new THREE.MeshPhongMaterial({color:this.planeColor, shininess:100})
       var plane = new THREE.Mesh( geometry, material );
       plane.receiveShadow = true;
       plane.rotation.x = -Math.PI/2;
@@ -161,8 +172,8 @@ var Carousel3D = function carousel3D () {
       // arrow_right_helper.appendChild(arrow_right_img);
 
 
-      arrow_left_helper.addEventListener( 'click', () => { this.tileOffset -= 1; this.rotate( 500); }  , false );
-      arrow_right_helper.addEventListener( 'click', () => { this.tileOffset += 1; this.rotate( 500); }  , false );
+      arrow_left_helper.addEventListener( 'click', () => { this.tileOffset -= 1; this.rotate( 400); }  , false );
+      arrow_right_helper.addEventListener( 'click', () => { this.tileOffset += 1; this.rotate( 400); }  , false );
 
       arrow_container.appendChild( this.renderer.domElement );
       this.container.appendChild(arrow_container);
@@ -225,11 +236,10 @@ var Carousel3D = function carousel3D () {
         return;
       }
     }
-    else if (limit - start <= this.targets.length/2 ) {
+    else if (limit - start < this.targets.length/2 ) {
       this.tileOffset -= Math.sign(this.tileOffset);
       return;
     }
-
 
 
 

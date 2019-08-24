@@ -11,7 +11,6 @@
 .Carousel3D-Arrow.helper {
   opacity: 0.25;
   height: 100%;
-  white-space: nowrap;
 }
 
 .Carousel3D-Arrow span {
@@ -22,7 +21,7 @@
 
 .Carousel3D-Arrow svg {
   vertical-align: middle;
-  fill:white;
+  fill:grey;
 }
 
 .Carousel3D-Arrow.helper:hover {
@@ -40,10 +39,8 @@
 }
 
 .Carousel3D-Tile {
-  /* width: 120px;
-  height: 160px; */
-  box-shadow: 0px 0px 12px rgba(0,255,255,0.5);
-  border: 1px solid rgba(127,255,255,0.25);
+  box-shadow: 0px 0px 12px rgba(255,0,0,0.5);
+  border: 1px solid rgba(255,0,0,0.25);
   font-family: Helvetica, sans-serif;
   text-align: center;
   line-height: normal;
@@ -51,8 +48,8 @@
 }
 
  .Carousel3D-Tile:hover {
-  width: 180px;
-  height: 190px;
-  box-shadow: 0px 0px 12px rgba(0,255,255,0.75);
-  border: 1px solid rgba(127,255,255,0.75);
+  /* width: 180px;
+  height: 190px; */
+  box-shadow: 0px 0px 12px rgba(255,0,0,0.8);
+  border: 1px solid rgba(255,0,0,0.8);
 }

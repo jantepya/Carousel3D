@@ -331,7 +331,7 @@ var Carousel3D = function carousel3D () {
 
 }
 
-var controls;
+// var controls;
 
 
 export { Carousel3D };

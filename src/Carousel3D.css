@@ -38,18 +38,29 @@
                                   supported by Chrome and Opera */
 }
 
-.Carousel3D-Tile {
+.Carousel3D-Tile.red {
   box-shadow: 0px 0px 12px rgba(255,0,0,0.5);
   border: 1px solid rgba(255,0,0,0.25);
+}
+
+.Carousel3D-Tile.blue {
+  box-shadow: 0px 0px 12px rgba(0,255,255,0.5);
+  border: 1px solid rgba(0,255,255,0.25);
+}
+
+.Carousel3D-Tile {
   font-family: Helvetica, sans-serif;
   text-align: center;
   line-height: normal;
   cursor: default;
 }
 
- .Carousel3D-Tile:hover {
-  /* width: 180px;
-  height: 190px; */
-  box-shadow: 0px 0px 12px rgba(255,0,0,0.8);
-  border: 1px solid rgba(255,0,0,0.8);
+.Carousel3D-Tile.blue:hover {
+  box-shadow: 0px 0px 12px rgba(0,255,255,0.8);
+  border: 1px solid rgba(0,255,255,0.8);
+}
+
+.Carousel3D-Tile.red:hover {
+ box-shadow: 0px 0px 12px rgba(255,0,0,0.8);
+ border: 1px solid rgba(255,0,0,0.8);
 }

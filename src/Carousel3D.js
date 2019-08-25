@@ -22,6 +22,7 @@ var Carousel3D = function carousel3D () {
   this.containerName = "";
   this.textSelectable = true;
   this.tileBackgroundColor = "black";
+  this.tileBorderColor = "blue";
   this.tileMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, shadowSide: THREE.BackSide} );
   this.tileSize = {
     'w':120,
@@ -273,10 +274,10 @@ var Carousel3D = function carousel3D () {
       tile.style.width = this.tileSize.w + "px";
       tile.style.height = this.tileSize.h + "px";
       if (this.textSelectable) {
-        tile.className = 'Carousel3D-Tile';
+        tile.className = 'Carousel3D-Tile ' + this.tileBorderColor;
       }
       else {
-        tile.className = 'Carousel3D-Tile noselect';
+        tile.className = 'Carousel3D-Tile ' + this.tileBorderColor + ' noselect';
       }
 
 

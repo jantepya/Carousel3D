@@ -123,8 +123,6 @@ var Carousel3D = function carousel3D () {
     // var help = new THREE.CameraHelper( spotLight.shadow.camera )
     // sceneGL.add( help );
 
-    this.container = document.getElementById( 'container' );
-
     this.renderer = new CSS3DRenderer();
     this.renderer.setSize( this.container.clientWidth, this.container.clientHeight );
     this.renderer.domElement.style.position = 'absolute';

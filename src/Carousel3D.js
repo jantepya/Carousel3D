@@ -37,6 +37,7 @@ var Carousel3D = function carousel3D () {
 
   // Callbacks
   this.onSelectionChange = null;
+  this.onStart = null;
 
   this.init = function () {
 
@@ -195,6 +196,12 @@ var Carousel3D = function carousel3D () {
 
     window.addEventListener( 'resize', () => { this.onWindowResize() }  , false );
 
+    try {
+      var ind = this.getSelected();
+      this.onStart(ind);
+    }
+    catch { }
+
   }
 
 
@@ -273,7 +280,8 @@ var Carousel3D = function carousel3D () {
       .start();
 
     try {
-      this.onSelectionChange();
+      var ind = this.getSelected();
+      this.onSelectionChange(ind);
     }
     catch { }
 

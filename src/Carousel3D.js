@@ -18,16 +18,14 @@ var Carousel3D = function carousel3D () {
   this.ShadowObjects = [];
   this.tileOffset = 0;
 
-
+  // User Modified fields
   this.containerName = "";
   this.textSelectable = true;
   this.tileBackgroundColor = "black";
   this.tileBorderColor = "blue";
   this.tileMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, shadowSide: THREE.BackSide} );
-  this.tileSize = {
-    'w':120,
-    'h':160,
-  };
+  this.tileSize = { 'w':120, 'h':160 };
+  this.spotLightPosition = {'x':0, 'y':250, 'z':-200};
   this.tileMargin = 20;
   this.tileElements = [];
   this.planeHeight = -46;
@@ -36,6 +34,9 @@ var Carousel3D = function carousel3D () {
   this.ambientLight = false;
   this.cameraZoom = 0;
   this.cameraHeight = 40;
+
+  // Callbacks
+  this.onSelectionChange = null;
 
   this.init = function () {
 
@@ -106,7 +107,7 @@ var Carousel3D = function carousel3D () {
 		// sceneGL.add( ambientLight );
 
     var spotLight = new THREE.SpotLight( 0xffffff, 0.5 );
-    spotLight.position.set( 0, 250, -200 );
+    spotLight.position.copy( this.spotLightPosition );
 
     spotLight.castShadow = true;
 
@@ -207,9 +208,18 @@ var Carousel3D = function carousel3D () {
   }
 
 
+  this.getSelected = function () {
+    if (this.tileElements.length > 12) {
+      return Math.floor((this.tileElements.length - 1)/2) + this.tileOffset - 1;
+    }
+    else {
+      return this.tileOffset + Math.floor((this.targets.length ) / 2) - 1;
+    }
+  }
+
   this.rotate = function (duration) {
 
-    //TWEEN.removeAll();
+    TWEEN.removeAll();
 
     // make sure at most only 12 tiles are moving
     var limit = this.targets.length + this.tileOffset;
@@ -240,8 +250,6 @@ var Carousel3D = function carousel3D () {
       return;
     }
 
-
-
     for ( var i = start; i < limit; i ++ ) {
 
       var objectCSS = this.CSSobjects[ i ];
@@ -263,9 +271,15 @@ var Carousel3D = function carousel3D () {
       .to( {}, duration * 2 )
       .onUpdate( () => { this.render() } )
       .start();
+
+    try {
+      this.onSelectionChange();
+    }
+    catch { }
+
   }
 
-  this.createTile = function ( i , offset ) {
+  this.createTile = function ( i ) {
 
       var tile = document.createElement( 'div' );
       tile.style.backgroundColor = this.tileBackgroundColor;

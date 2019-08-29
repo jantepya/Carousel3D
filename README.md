@@ -5,11 +5,17 @@ Carousel3D is an interactive 3D HTML/JS carousel made with ThreeJS. The Carousel
 
 ## Example
 
-Try it out here: https://jantepya.github.io/Carousel3D/
+Try it out here: https://jonmadethings.com/Carousel3D/
 
 
 
 ## Getting Started
+
+### Include Styling
+
+```HTML
+<link type="text/css" rel="stylesheet" href="./src/Carousel3D.css">
+```
 
 ### Import module
 

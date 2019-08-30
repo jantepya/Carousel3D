@@ -4,6 +4,8 @@
 		<title>Carousel3D</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css">
 		<link type="text/css" rel="stylesheet" href="./src/Carousel3D.css">
 		<link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
 		<link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
@@ -19,41 +21,138 @@
 		</script>
 
 		<style>
-
-			#container {
-				/* margin:100px; */
-				/* padding: 50px; */
+			#carousel {
 				width : 100%;
 				height: 330px;
-
 			}
-
-			.number {
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				height: 30%;
-				width: 50%;
-				margin: -15% 0 0 -25%;
-
-			  color: rgba(127,255,255,0.75);
-				font-size: 24px;
-			}
-
-			body {
-				margin: 0;
-			}
-
-			img {
+			#carousel img {
 				height: 300px;
 				width: 200px;
 			}
-
+			body {
+				margin: 0;
+			}
+			.logo {
+				height:28px;
+			}
+			footer {
+	      text-align:center;
+	      margin-bottom:1em;
+	    }
+			dd {
+				margin-left:3em;
+				margin-bottom:1em;
+			}
+			dt {
+				color: #262699;
+			}
+			.attr-type {
+				font-weight: 700;
+			}
+			.container {
+				max-width: 1000px;
+			}
+			.content {
+				padding-top: 2em;
+				padding-bottom: 2em;
+			}
 		</style>
 	</head>
 	<body>
 
-		<div id="container" ></div>
+		<div id="carousel" ></div>
+
+		<div>
+			<table>
+				<tr>
+					<th><a href="/"><img src="/img/logo.png" class="logo" alt="Jon Made Things"></a></th>
+				</tr>
+				<tr>
+					<td><a href="https://github.com/jantepya/Carousel3D" ><i class="fab fa-lg fa-github"></i>Source Code</a></td>
+				</tr>
+			</table>
+		</div>
+
+		<div class="container">
+			<div class="jumbotron content" >
+	      <h1 class="display-6">Carousel3D</h1>
+	      <p>Carousel3D is an interactive rotating 3D HTML/JS carousel made with ThreeJS.
+	        The Carousel3D object uses the ThreeJS CSS3DRenderer to display and rotate 3D tiles.
+	        Each tile is actually just an HTML div element so you should be able to generate and load your own HTML elements, such as images, videos, or text.</p>
+	    </div>
+			<div class="jumbotron content" >
+				<h1 class="display-6">Parameters</h1>
+				<dl>
+					<dt>this.containerName</dt>
+					<dd><span class="attr-type">String</span> - ID of the canvas element where the Carousel is to be created. This attribute is required.</dd>
+
+					<dt>this.textSelectable</dt>
+					<dd><span class="attr-type">Boolean</span> - Determines whether HTML values in the Caoursel can be selected or highlighted. Default is <code>true</code>.</dd>
+
+					<dt>this.tileBackgroundColor</dt>
+					<dd><span class="attr-type">String</span> - Determines whether background color of the tiles. Default is <code>"black"</code>.</dd>
+
+					<dt>this.tileBorderColor</dt>
+					<dd><span class="attr-type">String</span> - Determines the color of the border. Can either be <code>"blue"</code> or <code>"red"</code>.</dd>
+
+					<dt>this.tileSize</dt>
+					<dd><span class="attr-type">Dict</span> - Determines the width and height of the tiles in pixels. Default is: <code>{ 'w':120, 'h':160 }</code>.</dd>
+
+					<dt>this.spotLightPosition</dt>
+					<dd><span class="attr-type">Dict</span> - Determines the 3D position of the spot light. Default is: <code>{'x':0, 'y':250, 'z':-200}</code>.</dd>
+
+					<dt>this.tileMargin</dt>
+					<dd><span class="attr-type">Number</span> - Determines the margin between tiles in pixels. Default is: <code>20</code>.</dd>
+
+					<dt>this.tileElements</dt>
+					<dd><span class="attr-type">List</span> - List of HTML contents of each tile. This attribute is required to display content on the tiles.</dd>
+
+					<dt>this.planeHeight</dt>
+					<dd><span class="attr-type">List</span> - Determines the height of the plane on which shadows is generated. Generally needs to be adjusted as the size of tiles changes. Default is: <code>-46</code>.</dd>
+
+					<dt>this.backgroundColor</dt>
+					<dd><span class="attr-type">Hex</span> - Determines the color of the Carousel background. Default is: <code>#000000</code>.</dd>
+
+					<dt>this.planeColor</dt>
+					<dd><span class="attr-type">Hex</span> - Determines the color of the plane surface where light is shining. Default is: <code>#ffffff</code>.</dd>
+
+					<dt>this.ambientLight</dt>
+					<dd><span class="attr-type">Boolean</span> - Determines whether or not to include ambient light. Recommended if background color isn't black. Default is: <code>false</code>.</dd>
+
+					<dt>this.cameraZoom</dt>
+					<dd><span class="attr-type">Number</span> - Determines how zoomed in the user perspective is. Generally needs to be adjusted as the size of tiles changes. Default is: <code>0</code>.</dd>
+
+					<dt>this.cameraHeight</dt>
+					<dd><span class="attr-type">Number</span> - Determines the y position of the user perspective. Generally needs to be adjusted as the size of tiles changes. Default is: <code>40</code>.</dd>
+				</dl>
+			</div>
+			<div class="jumbotron content" >
+				<h1 class="display-6">Callbacks</h1>
+				<dl>
+					<dt>this.onSelectionChange</dt>
+					<dd> Called after completing a rotation.</dd>
+
+					<dt>this.onStart</dt>
+					<dd> Called after init.</dd>
+				</dl>
+			</div>
+			<div class="jumbotron content" >
+				<h1 class="display-6">Methods</h1>
+				<dl>
+					<dt>this.init()</dt>
+					<dd>Initiates Carousel3D object. Parameters need to be set beofre calling this function.</dd>
+
+					<dt>this.getSelected()</dt>
+					<dd>Returns the index of the currently selected tile.</dd>
+
+					<dt>this.rotateTo( index )</dt>
+					<dd>Rotates to specified index.</dd>
+				</dl>
+			</div>
+			<hr>
+		</div>
+
+		<footer>2019 Jon</footer>
 
 		<script type="module" >
 
@@ -68,9 +167,8 @@
 				tileElements.push(img);
 			}
 
-
 			var car = new Carousel3D();
-			car.containerName = "container";
+			car.containerName = "carousel";
 			car.tileElements = tileElements;
 			car.textSelectable = false;
 			car.backgroundColor = 0xffffff;
@@ -83,9 +181,6 @@
 			car.tileMargin = 35;
 			car.tileBorderColor = "red";
 			car.init();
-
-
-			car.rotateTo( 2 );
 
 		</script>
 

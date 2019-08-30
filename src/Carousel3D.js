@@ -290,6 +290,7 @@ var Carousel3D = function carousel3D () {
   this.createTile = function ( i ) {
 
       var tile = document.createElement( 'div' );
+      tile.addEventListener("click", () => { this.rotateTo(i); } ,false);
       tile.style.backgroundColor = this.tileBackgroundColor;
       tile.style.width = this.tileSize.w + "px";
       tile.style.height = this.tileSize.h + "px";
@@ -328,6 +329,12 @@ var Carousel3D = function carousel3D () {
       this.ShadowObjects.push( mesh );
 
 	}
+
+  this.rotateTo = function ( index ) {
+    var current = this.getSelected();
+    this.tileOffset += index - current;
+    this.rotate( 800 );
+  }
 
 
   this.onWindowResize = function () {

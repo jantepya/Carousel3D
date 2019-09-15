@@ -1,3 +1,7 @@
+import * as THREE from '../lib/three/build/three.module.js';
+import { TWEEN } from '../lib/three/examples/jsm/libs/tween.module.min.js';
+import { CSS3DRenderer, CSS3DObject } from '../lib/three/examples/jsm/renderers/CSS3DRenderer.js';
+// import { TrackballControls } from '../lib/three/examples/jsm/controls/TrackballControls.js';
 
 
 var Carousel3D = function carousel3D () {
@@ -121,7 +125,7 @@ var Carousel3D = function carousel3D () {
     // var help = new THREE.CameraHelper( spotLight.shadow.camera )
     // sceneGL.add( help );
 
-    this.renderer = new THREE.CSS3DRenderer();
+    this.renderer = new CSS3DRenderer();
     this.renderer.setSize( this.container.clientWidth, this.container.clientHeight );
     this.renderer.domElement.style.position = 'absolute';
     // this.container.appendChild( this.renderer.domElement );
@@ -150,9 +154,7 @@ var Carousel3D = function carousel3D () {
       arrow_left_helper.appendChild(arrow_left_span);
 
       arrow_left_helper.innerHTML += '<svg height="64px" width="64px" aria-hidden="true" focusable="false" data-icon="angle-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path d="M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34z"></path></svg>';
-      // var arrow_left_img = document.createElement( 'img' );
-      // arrow_left_img.src = "./src/angle-left.png";
-      // arrow_left_helper.appendChild(arrow_left_img);
+
 
       // --------------------
       // right arrow
@@ -164,9 +166,6 @@ var Carousel3D = function carousel3D () {
       arrow_right_helper.appendChild(arrow_right_span);
 
       arrow_right_helper.innerHTML += '<svg height="64px" width="64px" aria-hidden="true" focusable="false" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></svg>';
-      // var arrow_right_img = document.createElement( 'img' );
-      // arrow_right_img.src = "./src/angle-right.png";
-      // arrow_right_helper.appendChild(arrow_right_img);
 
 
       arrow_left_helper.addEventListener( 'click', () => { this.tileOffset -= 1; this.rotate( 400); }  , false );
@@ -196,9 +195,7 @@ var Carousel3D = function carousel3D () {
       var ind = this.getSelected();
       this.onStart(ind);
     }
-    catch ( err ) {
-
-    }
+    catch (err) {    }
 
   }
 
@@ -281,9 +278,7 @@ var Carousel3D = function carousel3D () {
       var ind = this.getSelected();
       this.onSelectionChange(ind);
     }
-    catch ( err ) {
-
-    }
+    catch ( err ) {     }
 
   }
 
@@ -307,7 +302,7 @@ var Carousel3D = function carousel3D () {
         tile.appendChild( this.tileElements[ i ] );
       }
       catch(err) {
-        console.warn("Carousel3D:", err.message);;
+        console.error(err);
       }
 
       var j = i;
@@ -315,7 +310,7 @@ var Carousel3D = function carousel3D () {
         j = 11;
       }
 
-      var object = new THREE.CSS3DObject( tile );
+      var object = new CSS3DObject( tile );
       object.position.copy( this.targets[ j - this.tileOffset ].position );
       this.sceneCSS.add( object );
       this.CSSobjects.push( object );
@@ -359,3 +354,6 @@ var Carousel3D = function carousel3D () {
 }
 
 // var controls;
+
+
+export { Carousel3D };

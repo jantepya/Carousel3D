@@ -1,0 +1,25 @@
+{
+  "name": "carousel3d",
+  "version": "1.0.0",
+  "description": "Interactive 3D Carousel made with ThreeJS",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jantepya/Carousel3D.git"
+  },
+  "author": "Jonathan Antepyan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jantepya/Carousel3D/issues"
+  },
+  "homepage": "https://github.com/jantepya/Carousel3D#readme",
+  "dependencies": {
+    "three": "^0.120.1"
+  }
+}

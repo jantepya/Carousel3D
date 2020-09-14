@@ -14,13 +14,13 @@ Try it out here: https://jonmadethings.com/Carousel3D/
 ### Include Styling
 
 ```HTML
-<link type="text/css" rel="stylesheet" href="./src/Carousel3D.css">
+<link type="text/css" rel="stylesheet" href="./dist/Carousel3D.css">
 ```
 
 ### Import module
 
 ```Javascript
- import { Carousel3D } from './src/Carousel3D.js';
+ import { Carousel3D } from './dist/Carousel3D.js';
 ```
 
 ### Create Carousel3D Instance
@@ -60,9 +60,14 @@ car.init();
 ```
 
 ## Development
-Download the project and run local test server with python command:
+Download the project and install dependencies
 ```
-python3 -m http.server --bind 127.0.0.1
+npm install
+```
+
+Run test server with 
+```
+npm run test
 ```
 You should now be able access the project in your browser at http://127.0.0.1:8000/index.html.
 

@@ -1,6 +1,8 @@
+"use strict";
+
 import * as THREE from '../node_modules/three/build/three.module.js';
 import { TWEEN } from '../node_modules/three/examples/jsm/libs/tween.module.min.js';
-import { CSS3DRenderer, CSS3DObject } from '../lib/three/examples/jsm/renderers/CSS3DRenderer.js';
+import { CSS3DRenderer, CSS3DObject } from '../node_modules/three/examples/jsm/renderers/CSS3DRenderer.js';
 
 const Carousel3D = function () {
 	this.container = null;

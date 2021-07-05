@@ -2,7 +2,7 @@
 
 import * as THREE from '../node_modules/three/build/three.module.js';
 import { TWEEN } from '../node_modules/three/examples/jsm/libs/tween.module.min.js';
-import { CSS3DRenderer, CSS3DObject } from '../node_modules/three/examples/jsm/renderers/CSS3DRenderer.js';
+import { CSS3DRenderer } from '../node_modules/three/examples/jsm/renderers/CSS3DRenderer.js';
 
 import { Carousel3DTile } from './Carousel3DTile.js';
 
@@ -18,7 +18,7 @@ const Carousel3D = function () {
 	this.arrowDiv = null;
 	this.targetPositions = []; // Fixed position list used to reassign 3D object positions on rotate
 	this.tiles3D = [];
-	this.tileOffset = 0;
+	this.tileOffset = 0; // Index offset needed to center elements
 
 	// User Modified fields
 	this.containerName = "";
@@ -79,12 +79,13 @@ Carousel3D.prototype.init = function () {
 		this.targetPositions.push({ x, y, z });
 	}
 
-	// create tile elements
+	// determine initial offset needed to center elements
 	if (this.tileElements.length < this.targetPositions.length) {
 		const offset = Math.floor((this.targetPositions.length - this.tileElements.length) / 2);
 		this.tileOffset = -offset;
 	}
 
+	// Create tile elements
 	for (var i = 0; i < this.tileElements.length; i += 1) {
 		const tile = new Carousel3DTile(this, i, (t) => this.rotateTo(t.index));
 
@@ -177,7 +178,7 @@ Carousel3D.prototype.init = function () {
 	window.addEventListener('resize', () => { this.onWindowResize() }, false);
 
 	try {
-		const ind = this.getSelected();
+		const ind = this.getSelectedIndex();
 		this.onStart(ind);
 	}
 	catch (err) { }
@@ -188,33 +189,22 @@ Carousel3D.prototype.animate = function () {
 	requestAnimationFrame(() => { this.animate() });
 }
 
-Carousel3D.prototype.getSelected = function () {
-	if (this.tileElements.length > 12) {
-		return Math.floor((this.tileElements.length - 1) / 2) + this.tileOffset - 1;
-	}
-	else {
-		return this.tileOffset + Math.floor((this.targetPositions.length) / 2) - 1;
-	}
+Carousel3D.prototype.getSelectedIndex = function () {
+	return this.tileOffset + Math.floor(this.targetPositions.length / 2) - 1;
 }
 
 Carousel3D.prototype.rotate = function (duration) {
 
 	TWEEN.removeAll();
 
-	// make sure at most only 12 tiles are moving
-	var limit = this.targetPositions.length + this.tileOffset;
-
-	if (limit > this.tiles3D.length)
-		limit = this.tiles3D.length;
-
-	// starting tile index can't be less than 0
-	const start = this.tileOffset > 0 ? this.tileOffset : 0;
+	const endIndex = Math.min(this.targetPositions.length + this.tileOffset, this.tiles3D.length);
+	const startIndex = Math.max(this.tileOffset, 0);
+    console.assert(endIndex - startIndex <= this.targetPositions.length, {end: endIndex, start: startIndex, errorMsg: "Carousel3D Invalid start/end index"});
 
 	// don't rotate if all tiles pass the center point
-
 	if (this.tiles3D.length <= this.targetPositions.length / 2) {
-		var bounds = Math.floor(this.tiles3D.length / 2);
-		var center = - Math.floor((this.targetPositions.length - this.tileElements.length) / 2);
+		let bounds = Math.floor(this.tiles3D.length / 2);
+		let center = - Math.floor((this.targetPositions.length - this.tileElements.length) / 2);
 
 		if (this.tileOffset > center + bounds) {
 			this.tileOffset -= 1;
@@ -225,14 +215,24 @@ Carousel3D.prototype.rotate = function (duration) {
 			return;
 		}
 	}
-	else if (limit - start < this.targetPositions.length / 2) {
+	else if (endIndex - startIndex < this.targetPositions.length / 2) {
 		this.tileOffset -= Math.sign(this.tileOffset);
 		return;
 	}
 
-	for (var i = start; i < limit; i++) {
+	// Hide inactive tiles
+	for (let i = 0; i < startIndex; i++) {
+		this.tiles3D[i].SetIsVisible(false);
+	}
+	for (let i = endIndex; i < this.tiles3D.length; i++) {
+		this.tiles3D[i].SetIsVisible(false);
+	}
+
+	for (let i = startIndex; i < endIndex; i++) {
 
 		const tile = this.tiles3D[i];
+		this.tiles3D[i].SetIsVisible(true);
+
 		const target = this.targetPositions[i - this.tileOffset];
 
 		new TWEEN.Tween(tile.CSS3DObject.position)
@@ -252,13 +252,13 @@ Carousel3D.prototype.rotate = function (duration) {
 		.start();
 
 	if (this.onSelectionChange) {
-		const ind = this.getSelected();
+		const ind = this.getSelectedIndex();
 		this.onSelectionChange(ind);
 	}
 }
 
 Carousel3D.prototype.rotateTo = function (index) {
-	const current = this.getSelected();
+	const current = this.getSelectedIndex();
 	this.tileOffset += index - current;
 	this.rotate(800);
 }

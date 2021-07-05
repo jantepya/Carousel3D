@@ -61,4 +61,14 @@ Carousel3DTile.prototype.SetContent = function(content) {
 	}
 }
 
+Carousel3DTile.prototype.SetIsVisible = function(isVisible) {
+	if (this.mesh) {
+		this.mesh.visible = isVisible;
+	}
+
+	if (this.CSS3DObject) {
+		this.CSS3DObject.visible = isVisible;
+	}
+}
+
 export { Carousel3DTile };

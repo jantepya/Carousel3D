@@ -91,7 +91,7 @@ Carousel3D.prototype.init = function () {
 		var j = Math.min(DEFAULT_MAX_POOL_ITEMS - 1, i);
 		const targetPosition = this.targetPositions[j - this.tileOffset];
 		tile.SetPosition(targetPosition);
-
+		tile.SetContent(this.tileElements[i]);
 		this.sceneGL.add(tile.mesh);
 		this.sceneCSS.add(tile.CSS3DObject);
 		this.tiles3D.push(tile);

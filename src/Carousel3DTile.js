@@ -53,7 +53,7 @@ Carousel3DTile.prototype.SetContent = function(content) {
 		}
 
 		try {
-			tile.appendChild(content);
+			this.tile.appendChild(content);
 		}
 		catch (err) {
 			console.warn("Carousel3D:", err.message);;

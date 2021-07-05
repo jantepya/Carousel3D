@@ -4,6 +4,8 @@ import * as THREE from '../node_modules/three/build/three.module.js';
 import { TWEEN } from '../node_modules/three/examples/jsm/libs/tween.module.min.js';
 import { CSS3DRenderer, CSS3DObject } from '../node_modules/three/examples/jsm/renderers/CSS3DRenderer.js';
 
+const DEFAULT_MAX_POOL_ITEMS = 12;
+
 const Carousel3D = function () {
 	this.container = null;
 	this.sceneGL = null;
@@ -12,7 +14,7 @@ const Carousel3D = function () {
 	this.renderer = null;
 	this.rendererGL = null;
 	this.arrowDiv = null;
-	this.targets = [];
+	this.poolItems = [];
 	this.CSSobjects = [];
 	this.ShadowObjects = [];
 	this.tileOffset = 0;
@@ -58,30 +60,31 @@ Carousel3D.prototype.init = function () {
 	this.sceneGL.background = new THREE.Color(this.backgroundColor);
 
 	if (this.ambientLight) {
-		var light = new THREE.AmbientLight(0xaaaaaa); // soft white light
+		const light = new THREE.AmbientLight(0xaaaaaa); // soft white light
 		this.sceneGL.add(light);
 
 		this.sceneGL.fog = new THREE.Fog(this.backgroundColor, 70, 2500);
 	}
 
 	// create target positions
-	var circleRadius = 10000 * this.tileSize.w;
-	var w = (this.tileSize.w + this.tileMargin);
-	for (var i = 0; i < 12; i += 1) {
+	const circleRadius = 10000 * this.tileSize.w;
+	const tileWidth = (this.tileSize.w + this.tileMargin);
 
-		var x = (i + 1) * w - 6 * w; // 12 is the default number of displayed tiles. Multiply by 6 becaue 12 / 2
-		var y = 45;
-		var z = Math.sqrt(circleRadius - Math.pow((x - 25), 2)) - 1000; // equation for circle
+	for (var i = 0; i < DEFAULT_MAX_POOL_ITEMS; i += 1) {
 
-		var object = new THREE.Object3D();
+		const x = (i + 1) * tileWidth - (DEFAULT_MAX_POOL_ITEMS / 2) * tileWidth;
+		const y = 45;
+		const z = Math.sqrt(circleRadius - Math.pow((x - 25), 2)) - 1000; // equation for circle
+
+		const object = new THREE.Object3D();
 		object.position.set(x, y, z);
 
-		this.targets.push(object);
+		this.poolItems.push(object);
 	}
 
 	// create tile elements
-	if (this.tileElements.length < this.targets.length) {
-		var offset = Math.floor((this.targets.length - this.tileElements.length) / 2);
+	if (this.tileElements.length < this.poolItems.length) {
+		const offset = Math.floor((this.poolItems.length - this.tileElements.length) / 2);
 		this.tileOffset = -offset;
 	}
 
@@ -90,9 +93,9 @@ Carousel3D.prototype.init = function () {
 	}
 
 	{
-		var geometry = new THREE.PlaneGeometry(10000, 10000);
-		var material = new THREE.MeshPhongMaterial({ color: this.planeColor, shininess: 100 })
-		var plane = new THREE.Mesh(geometry, material);
+		const geometry = new THREE.PlaneGeometry(10000, 10000);
+		const material = new THREE.MeshPhongMaterial({ color: this.planeColor, shininess: 100 })
+		const plane = new THREE.Mesh(geometry, material);
 		plane.receiveShadow = true;
 		plane.rotation.x = -Math.PI / 2;
 		plane.position.y = this.planeHeight;
@@ -100,7 +103,7 @@ Carousel3D.prototype.init = function () {
 		this.sceneGL.add(plane);
 	}
 
-	var spotLight = new THREE.SpotLight(0xffffff, 0.5);
+	const spotLight = new THREE.SpotLight(0xffffff, 0.5);
 	spotLight.position.copy(this.spotLightPosition);
 
 	spotLight.castShadow = true;
@@ -127,29 +130,29 @@ Carousel3D.prototype.init = function () {
 
 	{
 		// add arrows to container
-		var arrow_container = document.createElement('div');
+		const arrow_container = document.createElement('div');
 		arrow_container.className = 'Carousel3D-Arrow noselect';
 		arrow_container.style.height = this.container.clientHeight + "px";
 		arrow_container.style.width = this.container.clientWidth + "px";
 
 		// --------------------
 		// left arrow
-		var arrow_left_helper = document.createElement('div');
+		const arrow_left_helper = document.createElement('div');
 		arrow_left_helper.className = 'Carousel3D-Arrow helper';
 		arrow_container.appendChild(arrow_left_helper);
 
-		var arrow_left_span = document.createElement('span');
+		const arrow_left_span = document.createElement('span');
 		arrow_left_helper.appendChild(arrow_left_span);
 
 		arrow_left_helper.innerHTML += '<svg height="64px" width="64px" aria-hidden="true" focusable="false" data-icon="angle-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path d="M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34z"></path></svg>';
 
 		// --------------------
 		// right arrow
-		var arrow_right_helper = document.createElement('div');
+		const arrow_right_helper = document.createElement('div');
 		arrow_right_helper.className = 'Carousel3D-Arrow helper right';
 		arrow_container.appendChild(arrow_right_helper);
 
-		var arrow_right_span = document.createElement('span');
+		const arrow_right_span = document.createElement('span');
 		arrow_right_helper.appendChild(arrow_right_span);
 
 		arrow_right_helper.innerHTML += '<svg height="64px" width="64px" aria-hidden="true" focusable="false" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></svg>';
@@ -169,7 +172,7 @@ Carousel3D.prototype.init = function () {
 	window.addEventListener('resize', () => { this.onWindowResize() }, false);
 
 	try {
-		var ind = this.getSelected();
+		const ind = this.getSelected();
 		this.onStart(ind);
 	}
 	catch (err) { }
@@ -185,7 +188,7 @@ Carousel3D.prototype.getSelected = function () {
 		return Math.floor((this.tileElements.length - 1) / 2) + this.tileOffset - 1;
 	}
 	else {
-		return this.tileOffset + Math.floor((this.targets.length) / 2) - 1;
+		return this.tileOffset + Math.floor((this.poolItems.length) / 2) - 1;
 	}
 }
 
@@ -194,19 +197,19 @@ Carousel3D.prototype.rotate = function (duration) {
 	TWEEN.removeAll();
 
 	// make sure at most only 12 tiles are moving
-	var limit = this.targets.length + this.tileOffset;
+	var limit = this.poolItems.length + this.tileOffset;
 
 	if (limit > this.CSSobjects.length)
 		limit = this.CSSobjects.length;
 
 	// starting tile index can't be less than 0
-	var start = this.tileOffset > 0 ? this.tileOffset : 0;
+	const start = this.tileOffset > 0 ? this.tileOffset : 0;
 
 	// don't rotate if all tiles pass the center point
 
-	if (this.CSSobjects.length <= this.targets.length / 2) {
+	if (this.CSSobjects.length <= this.poolItems.length / 2) {
 		var bounds = Math.floor(this.CSSobjects.length / 2);
-		var center = - Math.floor((this.targets.length - this.tileElements.length) / 2);
+		var center = - Math.floor((this.poolItems.length - this.tileElements.length) / 2);
 
 		if (this.tileOffset > center + bounds) {
 			this.tileOffset -= 1;
@@ -217,16 +220,16 @@ Carousel3D.prototype.rotate = function (duration) {
 			return;
 		}
 	}
-	else if (limit - start < this.targets.length / 2) {
+	else if (limit - start < this.poolItems.length / 2) {
 		this.tileOffset -= Math.sign(this.tileOffset);
 		return;
 	}
 
 	for (var i = start; i < limit; i++) {
 
-		var objectCSS = this.CSSobjects[i];
-		var shadowObject = this.ShadowObjects[i];
-		var target = this.targets[i - this.tileOffset];
+		const objectCSS = this.CSSobjects[i];
+		const shadowObject = this.ShadowObjects[i];
+		const target = this.poolItems[i - this.tileOffset];
 
 		new TWEEN.Tween(objectCSS.position)
 			.to({ x: target.position.x, y: target.position.y, z: target.position.z }, duration)
@@ -245,7 +248,7 @@ Carousel3D.prototype.rotate = function (duration) {
 		.start();
 
 	try {
-		var ind = this.getSelected();
+		const ind = this.getSelected();
 		this.onSelectionChange(ind);
 	}
 	catch (err) { }
@@ -253,7 +256,7 @@ Carousel3D.prototype.rotate = function (duration) {
 
 Carousel3D.prototype.createTile = function (i) {
 
-	var tile = document.createElement('div');
+	const tile = document.createElement('div');
 	tile.addEventListener("click", () => { this.rotateTo(i); }, false);
 	tile.style.backgroundColor = this.tileBackgroundColor;
 	tile.style.width = this.tileSize.w + "px";
@@ -277,23 +280,21 @@ Carousel3D.prototype.createTile = function (i) {
 		j = 11;
 	}
 
-	var object = new CSS3DObject(tile);
-	object.position.copy(this.targets[j - this.tileOffset].position);
+	const object = new CSS3DObject(tile);
+	object.position.copy(this.poolItems[j - this.tileOffset].position);
 	this.sceneCSS.add(object);
 	this.CSSobjects.push(object);
 
-
-	var geometry = new THREE.PlaneBufferGeometry(this.tileSize.w, this.tileSize.h);
-	var mesh = new THREE.Mesh(geometry, this.tileMaterial);
+	const geometry = new THREE.PlaneBufferGeometry(this.tileSize.w, this.tileSize.h);
+	const mesh = new THREE.Mesh(geometry, this.tileMaterial);
 	mesh.castShadow = true;
-	mesh.position.copy(this.targets[j - this.tileOffset].position);
+	mesh.position.copy(this.poolItems[j - this.tileOffset].position);
 	this.sceneGL.add(mesh);
 	this.ShadowObjects.push(mesh);
-
 }
 
 Carousel3D.prototype.rotateTo = function (index) {
-	var current = this.getSelected();
+	const current = this.getSelected();
 	this.tileOffset += index - current;
 	this.rotate(800);
 }

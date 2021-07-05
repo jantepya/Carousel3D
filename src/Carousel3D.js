@@ -14,7 +14,7 @@ const Carousel3D = function () {
 	this.renderer = null;
 	this.rendererGL = null;
 	this.arrowDiv = null;
-	this.poolItems = [];
+	this.targetPositions = []; // Fixed position list used to reassign 3D object positions on rotate
 	this.CSSobjects = [];
 	this.ShadowObjects = [];
 	this.tileOffset = 0;
@@ -66,7 +66,7 @@ Carousel3D.prototype.init = function () {
 		this.sceneGL.fog = new THREE.Fog(this.backgroundColor, 70, 2500);
 	}
 
-	// create target positions
+	// Create fixed target positions
 	const circleRadius = 10000 * this.tileSize.w;
 	const tileWidth = (this.tileSize.w + this.tileMargin);
 
@@ -76,15 +76,12 @@ Carousel3D.prototype.init = function () {
 		const y = 45;
 		const z = Math.sqrt(circleRadius - Math.pow((x - 25), 2)) - 1000; // equation for circle
 
-		const object = new THREE.Object3D();
-		object.position.set(x, y, z);
-
-		this.poolItems.push(object);
+		this.targetPositions.push({ x, y, z });
 	}
 
 	// create tile elements
-	if (this.tileElements.length < this.poolItems.length) {
-		const offset = Math.floor((this.poolItems.length - this.tileElements.length) / 2);
+	if (this.tileElements.length < this.targetPositions.length) {
+		const offset = Math.floor((this.targetPositions.length - this.tileElements.length) / 2);
 		this.tileOffset = -offset;
 	}
 
@@ -188,7 +185,7 @@ Carousel3D.prototype.getSelected = function () {
 		return Math.floor((this.tileElements.length - 1) / 2) + this.tileOffset - 1;
 	}
 	else {
-		return this.tileOffset + Math.floor((this.poolItems.length) / 2) - 1;
+		return this.tileOffset + Math.floor((this.targetPositions.length) / 2) - 1;
 	}
 }
 
@@ -197,7 +194,7 @@ Carousel3D.prototype.rotate = function (duration) {
 	TWEEN.removeAll();
 
 	// make sure at most only 12 tiles are moving
-	var limit = this.poolItems.length + this.tileOffset;
+	var limit = this.targetPositions.length + this.tileOffset;
 
 	if (limit > this.CSSobjects.length)
 		limit = this.CSSobjects.length;
@@ -207,9 +204,9 @@ Carousel3D.prototype.rotate = function (duration) {
 
 	// don't rotate if all tiles pass the center point
 
-	if (this.CSSobjects.length <= this.poolItems.length / 2) {
+	if (this.CSSobjects.length <= this.targetPositions.length / 2) {
 		var bounds = Math.floor(this.CSSobjects.length / 2);
-		var center = - Math.floor((this.poolItems.length - this.tileElements.length) / 2);
+		var center = - Math.floor((this.targetPositions.length - this.tileElements.length) / 2);
 
 		if (this.tileOffset > center + bounds) {
 			this.tileOffset -= 1;
@@ -220,7 +217,7 @@ Carousel3D.prototype.rotate = function (duration) {
 			return;
 		}
 	}
-	else if (limit - start < this.poolItems.length / 2) {
+	else if (limit - start < this.targetPositions.length / 2) {
 		this.tileOffset -= Math.sign(this.tileOffset);
 		return;
 	}
@@ -229,15 +226,15 @@ Carousel3D.prototype.rotate = function (duration) {
 
 		const objectCSS = this.CSSobjects[i];
 		const shadowObject = this.ShadowObjects[i];
-		const target = this.poolItems[i - this.tileOffset];
+		const target = this.targetPositions[i - this.tileOffset];
 
 		new TWEEN.Tween(objectCSS.position)
-			.to({ x: target.position.x, y: target.position.y, z: target.position.z }, duration)
+			.to(target, duration)
 			.easing(TWEEN.Easing.Quartic.Out)
 			.start();
 
 		new TWEEN.Tween(shadowObject.position)
-			.to({ x: target.position.x, y: target.position.y, z: target.position.z }, duration)
+			.to(target, duration)
 			.easing(TWEEN.Easing.Quartic.Out)
 			.start();
 	}
@@ -280,15 +277,17 @@ Carousel3D.prototype.createTile = function (i) {
 		j = 11;
 	}
 
+	const target = this.targetPositions[j - this.tileOffset];
+
 	const object = new CSS3DObject(tile);
-	object.position.copy(this.poolItems[j - this.tileOffset].position);
+	object.position.set(target.x, target.y, target.z);
 	this.sceneCSS.add(object);
 	this.CSSobjects.push(object);
 
 	const geometry = new THREE.PlaneBufferGeometry(this.tileSize.w, this.tileSize.h);
 	const mesh = new THREE.Mesh(geometry, this.tileMaterial);
 	mesh.castShadow = true;
-	mesh.position.copy(this.poolItems[j - this.tileOffset].position);
+	mesh.position.set(target.x, target.y, target.z);
 	this.sceneGL.add(mesh);
 	this.ShadowObjects.push(mesh);
 }

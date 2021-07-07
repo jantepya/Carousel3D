@@ -67,16 +67,19 @@ Carousel3D.prototype.init = function () {
 	}
 
 	// Create fixed target positions
-	const circleRadius = 10000 * this.tileSize.w;
-	const tileWidth = (this.tileSize.w + this.tileMargin);
+	const circleRadius = 6.5 * this.tileSize.w;
+	const tileWidth = this.tileSize.w + this.tileMargin;
+	const zOffset = -900;
+	const yHeight = 45;
 
 	for (var i = 0; i < DEFAULT_MAX_POOL_ITEMS; i += 1) {
 
+		// equation for circle: ( x - h )^2 + ( z - k )^2 = r^2, where ( h, k ) is the center and r is the radius.
 		const x = (i + 1) * tileWidth - (DEFAULT_MAX_POOL_ITEMS / 2) * tileWidth;
-		const y = 45;
-		const z = Math.sqrt(circleRadius - Math.pow((x - 25), 2)) - 1000; // equation for circle
+		let z = Math.pow(circleRadius, 2) - Math.pow(x, 2);
+		z = (Math.sign(z) * Math.sqrt(Math.abs(z))) + zOffset; 
 
-		this.targetPositions.push({ x, y, z });
+		this.targetPositions.push({ x: x, y: yHeight, z: z });
 	}
 
 	// determine initial offset needed to center elements
@@ -92,6 +95,7 @@ Carousel3D.prototype.init = function () {
 		var j = Math.min(DEFAULT_MAX_POOL_ITEMS - 1, i);
 		const targetPosition = this.targetPositions[j - this.tileOffset];
 		tile.SetPosition(targetPosition);
+		tile.SetIsVisible(i < DEFAULT_MAX_POOL_ITEMS);
 		tile.SetContent(this.tileElements[i]);
 		this.sceneGL.add(tile.mesh);
 		this.sceneCSS.add(tile.CSS3DObject);

@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/jantepya/Carousel3D#readme",
   "dependencies": {
-    "three": "^0.120.1"
+    "three": "^0.125.0"
   },
   "devDependencies": {
     "rollup": "^2.26.11"

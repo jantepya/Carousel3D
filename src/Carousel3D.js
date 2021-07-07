@@ -221,13 +221,21 @@ Carousel3D.prototype.rotate = function (duration) {
 	}
 
 	// Hide inactive tiles
+	const startPosition = this.targetPositions[0];
 	for (let i = 0; i < startIndex; i++) {
-		this.tiles3D[i].SetIsVisible(false);
-	}
-	for (let i = endIndex; i < this.tiles3D.length; i++) {
-		this.tiles3D[i].SetIsVisible(false);
+		const tile = this.tiles3D[i];
+		tile.SetPosition(startPosition);
+		tile.SetIsVisible(false);
 	}
 
+	const endPosition = this.targetPositions[this.targetPositions.length - 1];
+	for (let i = endIndex; i < this.tiles3D.length; i++) {
+		const tile = this.tiles3D[i];
+		tile.SetPosition(endPosition);
+		tile.SetIsVisible(false);
+	}
+
+	// Animate active tiles
 	for (let i = startIndex; i < endIndex; i++) {
 
 		const tile = this.tiles3D[i];

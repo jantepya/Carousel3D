@@ -21,6 +21,6 @@
     "three": "^0.125.0"
   },
   "devDependencies": {
-    "rollup": "^2.26.11"
+    "rollup": "^3.29.5"
   }
 }
